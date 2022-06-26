@@ -4,10 +4,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.awt.Toolkit;
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -326,14 +323,10 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
     {
     }
 
-    protected boolean handleComponentClick(IChatComponent component)
-    {
-        if (component == null)
-        {
+    protected boolean handleComponentClick(IChatComponent component) {
+        if (component == null) {
             return false;
-        }
-        else
-        {
+        } else {
             ClickEvent clickevent = component.getChatStyle().getChatClickEvent();
 
             if (isShiftKeyDown())
@@ -381,21 +374,19 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
                     {
                         LOGGER.error(("Can\'t open url for " + clickevent), (Throwable)urisyntaxexception);
                     }
-                }
-                else if (clickevent.getAction() == ClickEvent.Action.OPEN_FILE)
-                {
+                } else if (clickevent.getAction() == ClickEvent.Action.OPEN_FILE) {
                     URI uri1 = (new File(clickevent.getValue())).toURI();
                     this.openWebLink(uri1);
-                }
-                else if (clickevent.getAction() == ClickEvent.Action.SUGGEST_COMMAND)
-                {
+                } else if (clickevent.getAction() == ClickEvent.Action.SUGGEST_COMMAND) {
                     this.setText(clickevent.getValue(), true);
-                }
-                else if (clickevent.getAction() == ClickEvent.Action.RUN_COMMAND)
-                {
+                } else if (clickevent.getAction() == ClickEvent.Action.RUN_COMMAND) {
                     this.sendChatMessage(clickevent.getValue(), false);
+                } else if (clickevent.getAction() == ClickEvent.Action.COPY_TO_CLIPBOARD) {
+                    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    StringSelection stringSelection = new StringSelection(clickevent.getValue());
+                    clipboard.setContents(stringSelection, null);
                 } else {
-                    LOGGER.error("Don\'t know how to handle " + clickevent);
+                    LOGGER.error("Don't know how to handle " + clickevent);
                 }
 
                 return true;
@@ -410,8 +401,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
         this.sendChatMessage(msg, true);
     }
 
-    public void sendChatMessage(String msg, boolean addToChat)
-    {
+    public void sendChatMessage(String msg, boolean addToChat) {
         if (addToChat)
         {
             this.mc.ingameGUI.getChatGUI().addToSentMessages(msg);

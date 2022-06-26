@@ -1479,7 +1479,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
     public void handleTabComplete(S3APacketTabComplete packetIn)
     {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
-        String[] astring = packetIn.func_149630_c();
+        String[] astring = packetIn.playerNamesFromServer();
 
         if (this.gameController.currentScreen instanceof GuiChat)
         {

@@ -43,7 +43,7 @@ public class S3APacketTabComplete implements Packet<INetHandlerPlayClient>
         handler.handleTabComplete(this);
     }
 
-    public String[] func_149630_c()
+    public String[] playerNamesFromServer()
     {
         return this.matches;
     }
