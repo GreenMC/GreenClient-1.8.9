@@ -1,7 +1,7 @@
 package net.minecraftforge.client.model;
 
-import org.lwjgl.util.vector.Matrix4f;
 import net.minecraft.util.EnumFacing;
+import org.lwjgl.util.vector.Matrix4f;
 
 public interface ITransformation
 {

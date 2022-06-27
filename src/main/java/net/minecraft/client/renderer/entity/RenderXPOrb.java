@@ -6,9 +6,9 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.item.EntityXPOrb;
-import net.optifine.Config;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.optifine.Config;
 import net.optifine.CustomColors;
 
 public class RenderXPOrb extends Render<EntityXPOrb>

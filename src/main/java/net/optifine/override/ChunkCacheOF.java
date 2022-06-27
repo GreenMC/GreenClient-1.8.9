@@ -1,8 +1,6 @@
 package net.optifine.override;
 
-import java.util.Arrays;
 import net.minecraft.block.state.IBlockState;
-import net.optifine.Config;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -10,9 +8,12 @@ import net.minecraft.world.ChunkCache;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.optifine.Config;
 import net.optifine.DynamicLights;
 import net.optifine.reflect.Reflector;
 import net.optifine.util.ArrayCache;
+
+import java.util.Arrays;
 
 public class ChunkCacheOF implements IBlockAccess
 {

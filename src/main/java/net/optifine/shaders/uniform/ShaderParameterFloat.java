@@ -1,8 +1,8 @@
 package net.optifine.shaders.uniform;
 
-import net.optifine.Config;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.optifine.Config;
 import net.optifine.shaders.Shaders;
 
 public enum ShaderParameterFloat

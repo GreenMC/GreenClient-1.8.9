@@ -1,9 +1,10 @@
 package org.objectweb.asm.tree;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ModuleVisitor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModuleNode extends ModuleVisitor {
   public String name;

@@ -6,8 +6,8 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityBannerRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.optifine.Config;
 import net.minecraft.tileentity.TileEntityBanner;
+import net.optifine.Config;
 import net.optifine.reflect.Reflector;
 
 public class ModelAdapterBanner extends ModelAdapter

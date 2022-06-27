@@ -1,9 +1,10 @@
 package org.objectweb.asm.tree;
 
-import java.util.List;
-import java.util.Map;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+
+import java.util.List;
+import java.util.Map;
 
 public class TableSwitchInsnNode extends AbstractInsnNode {
   public int min;

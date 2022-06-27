@@ -1,8 +1,9 @@
 package org.objectweb.asm.tree;
 
+import org.objectweb.asm.MethodVisitor;
+
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import org.objectweb.asm.MethodVisitor;
 
 public class InsnList {
   private int size;

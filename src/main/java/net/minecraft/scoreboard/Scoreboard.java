@@ -2,13 +2,14 @@ package net.minecraft.scoreboard;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumChatFormatting;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumChatFormatting;
 
 public class Scoreboard
 {
@@ -196,15 +197,16 @@ public class Scoreboard
         return map;
     }
 
-    public void removeObjective(ScoreObjective p_96519_1_)
-    {
+    public void removeObjective(ScoreObjective p_96519_1_) {
+        if (p_96519_1_ == null) return; // GreenMC - Fix hypixel log spam 2
+
         this.scoreObjectives.remove(p_96519_1_.getName());
 
         for (int i = 0; i < 19; ++i)
         {
             if (this.getObjectiveInDisplaySlot(i) == p_96519_1_)
             {
-                this.setObjectiveInDisplaySlot(i, (ScoreObjective)null);
+                this.setObjectiveInDisplaySlot(i, null);
             }
         }
 

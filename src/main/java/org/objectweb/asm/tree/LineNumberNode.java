@@ -1,7 +1,8 @@
 package org.objectweb.asm.tree;
 
-import java.util.Map;
 import org.objectweb.asm.MethodVisitor;
+
+import java.util.Map;
 
 public class LineNumberNode extends AbstractInsnNode {
   public int line;

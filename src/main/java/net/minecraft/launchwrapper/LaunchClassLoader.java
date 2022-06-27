@@ -1,5 +1,8 @@
 package net.minecraft.launchwrapper;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+
 import java.io.*;
 import java.net.JarURLConnection;
 import java.net.URL;
@@ -14,10 +17,6 @@ import java.util.jar.Attributes.Name;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
 
 public class LaunchClassLoader extends URLClassLoader {
     public static final int BUFFER_SIZE = 1 << 12;

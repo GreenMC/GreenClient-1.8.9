@@ -1,5 +1,7 @@
 package net.optifine.http;
 
+import net.optifine.Config;
+
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -7,7 +9,6 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import net.optifine.Config;
 
 public class HttpPipelineReceiver extends Thread
 {

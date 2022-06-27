@@ -1,15 +1,9 @@
 package org.objectweb.asm.tree;
 
+import org.objectweb.asm.*;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.Handle;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.TypePath;
 
 public class MethodNode extends MethodVisitor {
   public int access;

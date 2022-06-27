@@ -1,11 +1,11 @@
 package net.optifine;
 
+import net.minecraft.util.ResourceLocation;
+import net.optifine.config.ConnectedParser;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import net.minecraft.util.ResourceLocation;
-import net.optifine.config.ConnectedParser;
 
 public class RandomEntityProperties
 {

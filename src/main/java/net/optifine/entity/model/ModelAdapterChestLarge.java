@@ -7,8 +7,8 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityChestRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.optifine.Config;
 import net.minecraft.tileentity.TileEntityChest;
+import net.optifine.Config;
 import net.optifine.reflect.Reflector;
 
 public class ModelAdapterChestLarge extends ModelAdapter

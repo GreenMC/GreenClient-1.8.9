@@ -1,8 +1,8 @@
 package net.optifine;
 
-import java.util.BitSet;
-
 import net.optifine.shaders.Shaders;
+
+import java.util.BitSet;
 
 public class SmartAnimations
 {

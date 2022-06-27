@@ -1,15 +1,16 @@
 package net.optifine.util;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import net.optifine.Config;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.optifine.Config;
 import net.optifine.reflect.Reflector;
 import net.optifine.reflect.ReflectorClass;
 import net.optifine.reflect.ReflectorField;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChunkUtils
 {

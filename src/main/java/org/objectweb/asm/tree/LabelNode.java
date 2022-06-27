@@ -1,8 +1,9 @@
 package org.objectweb.asm.tree;
 
-import java.util.Map;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+
+import java.util.Map;
 
 public class LabelNode extends AbstractInsnNode {
   private Label value;

@@ -1,8 +1,5 @@
 package net.optifine.render;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.state.BlockStateBase;
@@ -11,12 +8,16 @@ import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.RegionRenderCacheBuilder;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BreakingFour;
-import net.optifine.Config;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.optifine.BlockPosM;
+import net.optifine.Config;
 import net.optifine.model.ListQuadsOverlay;
+
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
 
 public class RenderEnv
 {

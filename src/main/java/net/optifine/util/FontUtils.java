@@ -1,11 +1,12 @@
 package net.optifine.util;
 
+import net.minecraft.util.ResourceLocation;
+import net.optifine.Config;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import net.optifine.Config;
-import net.minecraft.util.ResourceLocation;
 
 public class FontUtils
 {

@@ -1,9 +1,5 @@
 package org.objectweb.asm;
 
-import org.objectweb.asm.ByteVector;
-import org.objectweb.asm.ModuleVisitor;
-import org.objectweb.asm.SymbolTable;
-
 final class ModuleWriter extends ModuleVisitor {
   private final SymbolTable symbolTable;
   private final int moduleNameIndex;

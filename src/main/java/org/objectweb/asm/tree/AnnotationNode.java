@@ -1,8 +1,9 @@
 package org.objectweb.asm.tree;
 
+import org.objectweb.asm.AnnotationVisitor;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.objectweb.asm.AnnotationVisitor;
 
 public class AnnotationNode extends AnnotationVisitor {
   public String desc;

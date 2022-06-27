@@ -1,10 +1,10 @@
 package net.optifine.util;
 
+import net.optifine.Config;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.optifine.Config;
 
 public class NativeMemory {
 	private static LongSupplier bufferAllocatedSupplier = makeLongSupplier(new String[][] {{"sun.misc.SharedSecrets", "getJavaNioAccess", "getDirectBufferPool", "getMemoryUsed"}, {"jdk.internal.misc.SharedSecrets", "getJavaNioAccess", "getDirectBufferPool", "getMemoryUsed"}});

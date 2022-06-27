@@ -1,12 +1,9 @@
 package org.objectweb.asm.tree;
 
+import org.objectweb.asm.*;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.TypePath;
 
 public class FieldNode extends FieldVisitor {
   public int access;

@@ -1,9 +1,10 @@
 package org.objectweb.asm.tree;
 
-import java.util.List;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.TypePath;
+
+import java.util.List;
 
 public class LocalVariableAnnotationNode extends TypeAnnotationNode {
   public List<LabelNode> start;

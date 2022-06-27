@@ -1,11 +1,12 @@
 package net.optifine.shaders;
 
+import net.optifine.Config;
+import net.optifine.config.MatchBlock;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import net.optifine.Config;
-import net.optifine.config.MatchBlock;
 
 public class BlockAlias
 {

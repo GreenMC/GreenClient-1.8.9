@@ -1,14 +1,9 @@
 package org.objectweb.asm.tree;
 
+import org.objectweb.asm.*;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.ModuleVisitor;
-import org.objectweb.asm.TypePath;
 
 public class ClassNode extends ClassVisitor {
   public int version;

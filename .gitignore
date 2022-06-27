@@ -1,9 +1,10 @@
-/resourcepacks/
-/run/
-/saves/
-/screenshots/
-/shaderpacks/
-/logs/
-/build/
+resourcepacks/
+run/
+saves/
+screenshots/
+shaderpacks/
+logs/
+build/
+crash-reports/
 usercache.json
 servers.dat

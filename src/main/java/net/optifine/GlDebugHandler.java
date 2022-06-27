@@ -1,16 +1,10 @@
 package net.optifine;
 
-import java.nio.IntBuffer;
-
 import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.ARBDebugOutput;
-import org.lwjgl.opengl.ARBDebugOutputCallback;
-import org.lwjgl.opengl.ContextAttribs;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLContext;
-import org.lwjgl.opengl.PixelFormat;
+import org.lwjgl.opengl.*;
 import org.lwjgl.opengl.ARBDebugOutputCallback.Handler;
+
+import java.nio.IntBuffer;
 
 public class GlDebugHandler implements Handler
 {

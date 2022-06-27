@@ -1,7 +1,8 @@
 package org.objectweb.asm.tree;
 
-import java.util.Map;
 import org.objectweb.asm.MethodVisitor;
+
+import java.util.Map;
 
 public class TypeInsnNode extends AbstractInsnNode {
   public String desc;

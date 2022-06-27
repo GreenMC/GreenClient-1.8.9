@@ -1,7 +1,5 @@
 package net.minecraft.client.renderer;
 
-import java.util.BitSet;
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -11,15 +9,10 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
-import net.optifine.Config;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.ReportedException;
-import net.minecraft.util.Vec3i;
+import net.minecraft.util.*;
 import net.minecraft.world.IBlockAccess;
 import net.optifine.BetterSnow;
+import net.optifine.Config;
 import net.optifine.CustomColors;
 import net.optifine.model.BlockModelCustomizer;
 import net.optifine.model.ListQuadsOverlay;
@@ -27,6 +20,9 @@ import net.optifine.reflect.Reflector;
 import net.optifine.render.RenderEnv;
 import net.optifine.shaders.SVertexBuilder;
 import net.optifine.shaders.Shaders;
+
+import java.util.BitSet;
+import java.util.List;
 
 public class BlockModelRenderer
 {

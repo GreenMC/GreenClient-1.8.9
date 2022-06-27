@@ -1,13 +1,5 @@
 package org.objectweb.asm;
 
-import org.objectweb.asm.ByteVector;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Symbol;
-import org.objectweb.asm.SymbolTable;
-import org.objectweb.asm.Type;
-
 class Frame {
   static final int SAME_FRAME = 0;
   static final int SAME_LOCALS_1_STACK_ITEM_FRAME = 64;

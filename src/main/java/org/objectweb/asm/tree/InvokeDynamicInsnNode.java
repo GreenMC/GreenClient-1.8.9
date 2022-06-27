@@ -1,8 +1,9 @@
 package org.objectweb.asm.tree;
 
-import java.util.Map;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.MethodVisitor;
+
+import java.util.Map;
 
 public class InvokeDynamicInsnNode extends AbstractInsnNode {
   public String name;

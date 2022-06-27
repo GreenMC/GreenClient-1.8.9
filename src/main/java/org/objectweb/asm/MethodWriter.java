@@ -1,24 +1,5 @@
 package org.objectweb.asm;
 
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.AnnotationWriter;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.ByteVector;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.CurrentFrame;
-import org.objectweb.asm.Edge;
-import org.objectweb.asm.Frame;
-import org.objectweb.asm.Handle;
-import org.objectweb.asm.Handler;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodTooLargeException;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Symbol;
-import org.objectweb.asm.SymbolTable;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.TypePath;
-import org.objectweb.asm.TypeReference;
 import org.objectweb.asm.Attribute.Set;
 
 final class MethodWriter extends MethodVisitor {

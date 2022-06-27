@@ -1,29 +1,24 @@
 package net.minecraft.client.renderer.entity;
 
 import com.google.common.collect.Lists;
-import java.nio.FloatBuffer;
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelSpider;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Team;
-import net.optifine.Config;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
+import net.optifine.Config;
 import net.optifine.EmissiveTextures;
 import net.optifine.entity.model.CustomEntityModels;
 import net.optifine.reflect.Reflector;
@@ -32,8 +27,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 
-public abstract class RendererLivingEntity<T extends EntityLivingBase> extends Render<T>
-{
+import java.nio.FloatBuffer;
+import java.util.List;
+
+public abstract class RendererLivingEntity<T extends EntityLivingBase> extends Render<T> {
     private static final Logger logger = LogManager.getLogger();
     private static final DynamicTexture textureBrightness = new DynamicTexture(16, 16);
     public ModelBase mainModel;
@@ -54,31 +51,26 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
     private boolean renderLayersPushMatrix;
     public static final boolean animateModelLiving = Boolean.getBoolean("animate.model.living");
 
-    public RendererLivingEntity(RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn)
-    {
+    public RendererLivingEntity(RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn) {
         super(renderManagerIn);
         this.mainModel = modelBaseIn;
         this.shadowSize = shadowSizeIn;
         this.renderModelPushMatrix = this.mainModel instanceof ModelSpider;
     }
 
-    public <V extends EntityLivingBase, U extends LayerRenderer<V>> boolean addLayer(U layer)
-    {
+    public <V extends EntityLivingBase, U extends LayerRenderer<V>> boolean addLayer(U layer) {
         return this.layerRenderers.add((LayerRenderer<T>) layer);
     }
 
-    protected <V extends EntityLivingBase, U extends LayerRenderer<V>> boolean removeLayer(U layer)
-    {
+    protected <V extends EntityLivingBase, U extends LayerRenderer<V>> boolean removeLayer(U layer) {
         return this.layerRenderers.remove(layer);
     }
 
-    public ModelBase getMainModel()
-    {
+    public ModelBase getMainModel() {
         return this.mainModel;
     }
 
-    protected float interpolateRotation(float par1, float par2, float par3)
-    {
+    protected float interpolateRotation(float par1, float par2, float par3) {
         float f;
 
         for (f = par2 - par1; f < -180.0F; f += 360.0F)
@@ -94,12 +86,9 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
         return par1 + par3 * f;
     }
 
-    public void transformHeldFull3DItemLayer()
-    {
-    }
+    public void transformHeldFull3DItemLayer() {}
 
-    public void doRender(T entity, double x, double y, double z, float entityYaw, float partialTicks)
-    {
+    public void doRender(T entity, double x, double y, double z, float entityYaw, float partialTicks) {
         if (!Reflector.RenderLivingEvent_Pre_Constructor.exists() || !Reflector.postForgeBusEvent(Reflector.RenderLivingEvent_Pre_Constructor, new Object[] {entity, this, Double.valueOf(x), Double.valueOf(y), Double.valueOf(z)}))
         {
             if (animateModelLiving)
@@ -112,21 +101,19 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
             this.mainModel.swingProgress = this.getSwingProgress(entity, partialTicks);
             this.mainModel.isRiding = entity.isRiding();
 
-            if (Reflector.ForgeEntity_shouldRiderSit.exists())
-            {
-                this.mainModel.isRiding = entity.isRiding() && entity.ridingEntity != null && Reflector.callBoolean(entity.ridingEntity, Reflector.ForgeEntity_shouldRiderSit, new Object[0]);
+            if (Reflector.ForgeEntity_shouldRiderSit.exists()) {
+                this.mainModel.isRiding = entity.isRiding() && entity.ridingEntity != null
+                        && Reflector.callBoolean(entity.ridingEntity, Reflector.ForgeEntity_shouldRiderSit, new Object[0]);
             }
 
             this.mainModel.isChild = entity.isChild();
 
-            try
-            {
+            try {
                 float f = this.interpolateRotation(entity.prevRenderYawOffset, entity.renderYawOffset, partialTicks);
                 float f1 = this.interpolateRotation(entity.prevRotationYawHead, entity.rotationYawHead, partialTicks);
                 float f2 = f1 - f;
 
-                if (this.mainModel.isRiding && entity.ridingEntity instanceof EntityLivingBase)
-                {
+                if (this.mainModel.isRiding && entity.ridingEntity instanceof EntityLivingBase) {
                     EntityLivingBase entitylivingbase = (EntityLivingBase)entity.ridingEntity;
                     f = this.interpolateRotation(entitylivingbase.prevRenderYawOffset, entitylivingbase.renderYawOffset, partialTicks);
                     f2 = f1 - f;
@@ -258,7 +245,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
             }
             catch (Exception exception)
             {
-                logger.error((String)"Couldn\'t render entity", (Throwable)exception);
+                logger.error("Couldn't render entity", exception);
             }
 
             GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
@@ -325,10 +312,12 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
     {
         boolean isInvisible = !entitylivingbaseIn.isInvisible();
         boolean flag1 = !isInvisible && !entitylivingbaseIn.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer);
+        boolean hack = (Minecraft.getMinecraft().seeInvis
+                && (entitylivingbaseIn.getClass().isAssignableFrom(EntityPlayerSP.class)
+                || entitylivingbaseIn.getClass().isAssignableFrom(EntityPlayerMP.class)));
 
-        if (Minecraft.getMinecraft().seeInvis || (isInvisible || flag1)) {
-            if (!this.bindEntityTexture(entitylivingbaseIn))
-            {
+        if (hack || (isInvisible || flag1)) {
+            if (!this.bindEntityTexture(entitylivingbaseIn)) {
                 return;
             }
 

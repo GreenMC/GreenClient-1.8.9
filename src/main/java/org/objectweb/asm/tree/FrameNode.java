@@ -1,9 +1,10 @@
 package org.objectweb.asm.tree;
 
+import org.objectweb.asm.MethodVisitor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.objectweb.asm.MethodVisitor;
 
 public class FrameNode extends AbstractInsnNode {
   public int type;
