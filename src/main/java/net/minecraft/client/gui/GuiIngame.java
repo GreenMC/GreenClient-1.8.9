@@ -293,8 +293,7 @@ public class GuiIngame extends Gui
 
         ScoreObjective scoreobjective1 = scoreobjective != null ? scoreobjective : scoreboard.getObjectiveInDisplaySlot(1);
 
-        if (scoreobjective1 != null)
-        {
+        if (scoreobjective1 != null && !mc.sidebarDisabled) {
             this.renderScoreboard(scoreobjective1, scaledresolution);
         }
 
@@ -309,13 +308,14 @@ public class GuiIngame extends Gui
         GlStateManager.popMatrix();
         scoreobjective1 = scoreboard.getObjectiveInDisplaySlot(0);
 
-        if (this.mc.gameSettings.keyBindPlayerList.isKeyDown() && (!this.mc.isIntegratedServerRunning() || this.mc.thePlayer.sendQueue.getPlayerInfoMap().size() > 1 || scoreobjective1 != null))
-        {
+        if (this.mc.gameSettings.keyBindPlayerList.isKeyDown() &&
+                (!this.mc.isIntegratedServerRunning()
+                        || this.mc.thePlayer.sendQueue.getPlayerInfoMap().size() > 1
+                        || scoreobjective1 != null)
+        ) {
             this.overlayPlayerList.updatePlayerList(true);
             this.overlayPlayerList.renderPlayerlist(i, scoreboard, scoreobjective1);
-        }
-        else
-        {
+        } else {
             this.overlayPlayerList.updatePlayerList(false);
         }
 
@@ -324,8 +324,7 @@ public class GuiIngame extends Gui
         GlStateManager.enableAlpha();
     }
 
-    protected void renderTooltip(ScaledResolution sr, float partialTicks)
-    {
+    protected void renderTooltip(ScaledResolution sr, float partialTicks) {
         if (this.mc.getRenderViewEntity() instanceof EntityPlayer)
         {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -511,8 +510,7 @@ public class GuiIngame extends Gui
         }
     }
 
-    private void renderScoreboard(ScoreObjective objective, ScaledResolution scaledRes)
-    {
+    private void renderScoreboard(ScoreObjective objective, ScaledResolution scaledRes) {
         Scoreboard scoreboard = objective.getScoreboard();
         Collection<Score> collection = scoreboard.getSortedScores(objective);
         List<Score> list = Lists.newArrayList(Iterables.filter(collection, new Predicate<Score>()

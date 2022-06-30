@@ -8,8 +8,9 @@ public class Commands {
     private final List<Command> commands = new ArrayList<>();
 
     public Commands() {
-        commands.add(new ToggleInvisCommand("toggleinvis", new String[]{"toggleinvis", "invistoggle", "seeinvis", "invissee"}));
-        commands.add(new ToggleRedThingCommand("toggleredthing", new String[]{"toggleredthing", "redthing", "redtoggle", "togglered"}));
+        commands.add(new ToggleInvisCommand("toggleinvis", new String[]{"!toggleinvis", "!invistoggle", "!seeinvis", "!invissee"}));
+        commands.add(new ToggleRedThingCommand("toggleredthing", new String[]{"!toggleredthing", "!redthing", "!redtoggle", "!togglered"}));
+        commands.add(new ToggleSidebarCommand("togglesidebar", new String[]{"!togglesidebar", "!sidebar", "!scoreboard"}));
     }
 
     public List<Command> getCommands() {

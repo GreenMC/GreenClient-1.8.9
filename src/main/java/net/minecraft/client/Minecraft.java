@@ -193,7 +193,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private ResourceLocation mojangLogo;
     private final MinecraftSessionService sessionService;
     private SkinManager skinManager;
-    private final Queue < FutureTask<? >> scheduledTasks = Queues. < FutureTask<? >> newArrayDeque();
+    private final Queue < FutureTask<? >> scheduledTasks = Queues.newArrayDeque();
     private long field_175615_aJ = 0L;
     private final Thread mcThread = Thread.currentThread();
     private ModelManager modelManager;
@@ -210,6 +210,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private String debugProfilerName = "root";
     public boolean seeInvis;
     public boolean redThing;
+    public boolean sidebarDisabled;
     private final Commands commands;
 
     public Minecraft(GameConfiguration gameConfig) {
@@ -252,6 +253,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
     public void toggleRedThing() {
         this.redThing = !this.redThing;
+    }
+
+    public void toggleSidebar() {
+        this.sidebarDisabled = !sidebarDisabled;
     }
 
     public void run()

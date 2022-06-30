@@ -9,6 +9,9 @@ repositories {
     mavenCentral()
 }
 
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
 dependencies {
     implementation fileTree('libraries')
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'

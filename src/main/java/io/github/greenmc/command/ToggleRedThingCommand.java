@@ -1,6 +1,6 @@
 package io.github.greenmc.command;
 
-public class ToggleRedThingCommand implements Command {
+public class ToggleRedThingCommand extends Command {
 
     private final String name;
     private final String[] aliases;

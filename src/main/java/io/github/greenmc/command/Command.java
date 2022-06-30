@@ -3,19 +3,18 @@ package io.github.greenmc.command;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 
-public interface Command {
+public abstract class Command {
 
-    Minecraft minecraft = Minecraft.getMinecraft();
+    public Minecraft minecraft = Minecraft.getMinecraft();
 
-    String getName();
+    public abstract String getName();
 
-    boolean execute();
+    public abstract boolean execute();
 
-    String[] getAliases();
+    public abstract String[] getAliases();
 
-    default void sendMessage(String message) {
+    public void sendMessage(String message) {
         minecraft.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(message));
     }
-
 
 }

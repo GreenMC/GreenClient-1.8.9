@@ -1,11 +1,11 @@
 package io.github.greenmc.command;
 
-public class ToggleInvisCommand extends Command {
+public class ToggleSidebarCommand extends Command {
 
     private final String name;
     private final String[] aliases;
 
-    public ToggleInvisCommand(String name, String[] aliases) {
+    public ToggleSidebarCommand(String name, String[] aliases) {
         this.name = name;
         this.aliases = aliases;
     }
@@ -17,8 +17,8 @@ public class ToggleInvisCommand extends Command {
 
     @Override
     public boolean execute() {
-        minecraft.seeInvis = !minecraft.seeInvis;
-        sendMessage("Görünmezleri görme durumu artık: " + minecraft.seeInvis);
+        minecraft.toggleSidebar();
+        sendMessage("Scoreboardı görmeme durumu artık: " + minecraft.sidebarDisabled);
         return true;
     }
 
