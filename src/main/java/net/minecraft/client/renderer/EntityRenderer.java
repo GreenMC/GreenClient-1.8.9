@@ -86,7 +86,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
     public static int anaglyphField;
     private Minecraft mc;
     private final IResourceManager resourceManager;
-    private Random random = new Random();
+    private final Random random = new Random();
     private float farPlaneDistance;
     public ItemRenderer itemRenderer;
     private final MapItemRenderer theMapItemRenderer;

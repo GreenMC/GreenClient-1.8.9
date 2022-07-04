@@ -131,7 +131,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private CrashReport crashReporter;
     public int displayWidth;
     public int displayHeight;
-    private boolean connectedToRealms = false;
     private Timer timer = new Timer(20.0F);
     private PlayerUsageSnooper usageSnooper = new PlayerUsageSnooper("client", this, MinecraftServer.getCurrentTimeMillis());
     public WorldClient theWorld;
@@ -151,8 +150,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     public LoadingScreenRenderer loadingScreen;
     public EntityRenderer entityRenderer;
     private int leftClickCounter;
-    private int tempDisplayWidth;
-    private int tempDisplayHeight;
+    private final int tempDisplayWidth;
+    private final int tempDisplayHeight;
     private IntegratedServer theIntegratedServer;
     public GuiAchievement guiAchievement;
     public GuiIngame ingameGUI;
@@ -194,15 +193,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private final MinecraftSessionService sessionService;
     private SkinManager skinManager;
     private final Queue < FutureTask<? >> scheduledTasks = Queues.newArrayDeque();
-    private long field_175615_aJ = 0L;
     private final Thread mcThread = Thread.currentThread();
     private ModelManager modelManager;
     private BlockRendererDispatcher blockRenderDispatcher;
     volatile boolean running = true;
     public String debug = "";
-    public boolean field_175613_B = false;
-    public boolean field_175614_C = false;
-    public boolean field_175611_D = false;
     public boolean renderChunksMany = true;
     long debugUpdateTime = getSystemTime();
     int fpsCounter;
@@ -303,7 +298,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             catch (ReportedException reportedexception) {
                 this.addGraphicsAndWorldToCrashReport(reportedexception.getCrashReport());
                 this.freeMemory();
-                logger.fatal((String)"Reported exception thrown!", (Throwable)reportedexception);
+                logger.fatal("Reported exception thrown!", (Throwable)reportedexception);
                 this.displayCrashReport(reportedexception.getCrashReport());
                 break;
             } catch (Throwable throwable1) {
@@ -1066,19 +1061,16 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             memoryReserve = new byte[0];
             this.renderGlobal.deleteAllDisplayLists();
         }
-        catch (Throwable var3)
+        catch (Throwable ignored)
         {
-            ;
+
         }
 
-        try
-        {
+        try {
             System.gc();
-            this.loadWorld((WorldClient)null);
-        }
-        catch (Throwable var2)
-        {
-            ;
+            this.loadWorld(null);
+        } catch (Throwable ignored) {
+
         }
 
         System.gc();
@@ -1108,14 +1100,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             {
                 --keyCount;
 
-                if (keyCount < list.size() && !((Profiler.Result)list.get(keyCount)).field_76331_c.equals("unspecified"))
+                if (keyCount < list.size() && !list.get(keyCount).field_76331_c.equals("unspecified"))
                 {
                     if (this.debugProfilerName.length() > 0)
                     {
                         this.debugProfilerName = this.debugProfilerName + ".";
                     }
 
-                    this.debugProfilerName = this.debugProfilerName + ((Profiler.Result)list.get(keyCount)).field_76331_c;
+                    this.debugProfilerName = this.debugProfilerName + list.get(keyCount).field_76331_c;
                 }
             }
         }
@@ -1126,12 +1118,12 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         if (this.mcProfiler.profilingEnabled)
         {
             List<Profiler.Result> list = this.mcProfiler.getProfilingData(this.debugProfilerName);
-            Profiler.Result profiler$result = (Profiler.Result)list.remove(0);
+            Profiler.Result profiler$result = list.remove(0);
             GlStateManager.clear(256);
             GlStateManager.matrixMode(5889);
             GlStateManager.enableColorMaterial();
             GlStateManager.loadIdentity();
-            GlStateManager.ortho(0.0D, (double)this.displayWidth, (double)this.displayHeight, 0.0D, 1000.0D, 3000.0D);
+            GlStateManager.ortho(0.0D, this.displayWidth, (double)this.displayHeight, 0.0D, 1000.0D, 3000.0D);
             GlStateManager.matrixMode(5888);
             GlStateManager.loadIdentity();
             GlStateManager.translate(0.0F, 0.0F, -2000.0F);
@@ -1144,43 +1136,39 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             int k = this.displayHeight - i * 2;
             GlStateManager.enableBlend();
             worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-            worldrenderer.pos((double)((float)j - (float)i * 1.1F), (double)((float)k - (float)i * 0.6F - 16.0F), 0.0D).color(200, 0, 0, 0).endVertex();
-            worldrenderer.pos((double)((float)j - (float)i * 1.1F), (double)(k + i * 2), 0.0D).color(200, 0, 0, 0).endVertex();
-            worldrenderer.pos((double)((float)j + (float)i * 1.1F), (double)(k + i * 2), 0.0D).color(200, 0, 0, 0).endVertex();
-            worldrenderer.pos((double)((float)j + (float)i * 1.1F), (double)((float)k - (float)i * 0.6F - 16.0F), 0.0D).color(200, 0, 0, 0).endVertex();
+            worldrenderer.pos(((float)j - (float)i * 1.1F), (float)k - (float)i * 0.6F - 16.0F, 0.0D).color(200, 0, 0, 0).endVertex();
+            worldrenderer.pos(((float)j - (float)i * 1.1F), k + i * 2, 0.0D).color(200, 0, 0, 0).endVertex();
+            worldrenderer.pos(((float)j + (float)i * 1.1F), k + i * 2, 0.0D).color(200, 0, 0, 0).endVertex();
+            worldrenderer.pos(((float)j + (float)i * 1.1F), ((float)k - (float)i * 0.6F - 16.0F), 0.0D).color(200, 0, 0, 0).endVertex();
             tessellator.draw();
             GlStateManager.disableBlend();
             double d0 = 0.0D;
 
-            for (int l = 0; l < list.size(); ++l)
-            {
-                Profiler.Result profiler$result1 = (Profiler.Result)list.get(l);
+            for (Profiler.Result profiler$result1 : list) {
                 int i1 = MathHelper.floor_double(profiler$result1.field_76332_a / 4.0D) + 1;
                 worldrenderer.begin(6, DefaultVertexFormats.POSITION_COLOR);
                 int j1 = profiler$result1.getColor();
                 int k1 = j1 >> 16 & 255;
                 int l1 = j1 >> 8 & 255;
                 int i2 = j1 & 255;
-                worldrenderer.pos((double)j, (double)k, 0.0D).color(k1, l1, i2, 255).endVertex();
+                worldrenderer.pos(j, k, 0.0D).color(k1, l1, i2, 255).endVertex();
 
-                for (int j2 = i1; j2 >= 0; --j2)
-                {
-                    float f = (float)((d0 + profiler$result1.field_76332_a * (double)j2 / (double)i1) * Math.PI * 2.0D / 100.0D);
-                    float f1 = MathHelper.sin(f) * (float)i;
-                    float f2 = MathHelper.cos(f) * (float)i * 0.5F;
-                    worldrenderer.pos((double)((float)j + f1), (double)((float)k - f2), 0.0D).color(k1, l1, i2, 255).endVertex();
+                for (int j2 = i1; j2 >= 0; --j2) {
+                    float f = (float) ((d0 + profiler$result1.field_76332_a * (double) j2 / (double) i1) * Math.PI * 2.0D / 100.0D);
+                    float f1 = MathHelper.sin(f) * (float) i;
+                    float f2 = MathHelper.cos(f) * (float) i * 0.5F;
+                    worldrenderer.pos(((float) j + f1), ((float) k - f2), 0.0D).color(k1, l1, i2, 255).endVertex();
                 }
 
                 tessellator.draw();
                 worldrenderer.begin(5, DefaultVertexFormats.POSITION_COLOR);
 
-                for (int i3 = i1; i3 >= 0; --i3)
-                {
-                    float f3 = (float)((d0 + profiler$result1.field_76332_a * (double)i3 / (double)i1) * Math.PI * 2.0D / 100.0D);
-                    float f4 = MathHelper.sin(f3) * (float)i;
-                    float f5 = MathHelper.cos(f3) * (float)i * 0.5F;
-                    worldrenderer.pos((double)((float)j + f4), (double)((float)k - f5), 0.0D).color(k1 >> 1, l1 >> 1, i2 >> 1, 255).endVertex();
-                    worldrenderer.pos((double)((float)j + f4), (double)((float)k - f5 + 10.0F), 0.0D).color(k1 >> 1, l1 >> 1, i2 >> 1, 255).endVertex();
+                for (int i3 = i1; i3 >= 0; --i3) {
+                    float f3 = (float) ((d0 + profiler$result1.field_76332_a * (double) i3 / (double) i1) * Math.PI * 2.0D / 100.0D);
+                    float f4 = MathHelper.sin(f3) * (float) i;
+                    float f5 = MathHelper.cos(f3) * (float) i * 0.5F;
+                    worldrenderer.pos( ((float) j + f4), ((float) k - f5), 0.0D).color(k1 >> 1, l1 >> 1, i2 >> 1, 255).endVertex();
+                    worldrenderer.pos( ((float) j + f4), ((float) k - f5 + 10.0F), 0.0D).color(k1 >> 1, l1 >> 1, i2 >> 1, 255).endVertex();
                 }
 
                 tessellator.draw();
@@ -1211,7 +1199,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
             for (int k2 = 0; k2 < list.size(); ++k2)
             {
-                Profiler.Result profiler$result2 = (Profiler.Result)list.get(k2);
+                Profiler.Result profiler$result2 = list.get(k2);
                 String s1 = "";
 
                 if (profiler$result2.field_76331_c.equals("unspecified"))
@@ -1244,7 +1232,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             {
                 this.inGameHasFocus = true;
                 this.mouseHelper.grabMouseCursor();
-                this.displayGuiScreen((GuiScreen)null);
+                this.displayGuiScreen(null);
                 this.leftClickCounter = 10000;
             }
         }
@@ -1307,7 +1295,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
             if (this.objectMouseOver == null)
             {
-                logger.error("Null returned as \'hitResult\', this shouldn\'t happen!");
+                logger.error("Null returned as 'hitResult', this shouldn't happen!");
 
                 if (this.playerController.isNotCreative())
                 {
@@ -1353,7 +1341,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
             if (this.objectMouseOver == null)
             {
-                logger.warn("Null returned as \'hitResult\', this shouldn\'t happen!");
+                logger.warn("Null returned as 'hitResult', this shouldn't happen!");
             }
             else
             {
@@ -1413,28 +1401,16 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
     }
 
-    public void toggleFullscreen()
-    {
-        try
-        {
+    public void toggleFullscreen() {
+        try {
             this.fullscreen = !this.fullscreen;
             this.gameSettings.fullScreen = this.fullscreen;
 
-            if (this.fullscreen)
-            {
+            if (this.fullscreen) {
                 this.updateDisplayMode();
                 this.displayWidth = Display.getDisplayMode().getWidth();
                 this.displayHeight = Display.getDisplayMode().getHeight();
 
-                if (this.displayWidth <= 0)
-                {
-                    this.displayWidth = 1;
-                }
-
-                if (this.displayHeight <= 0)
-                {
-                    this.displayHeight = 1;
-                }
             }
             else
             {
@@ -1442,15 +1418,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 this.displayWidth = this.tempDisplayWidth;
                 this.displayHeight = this.tempDisplayHeight;
 
-                if (this.displayWidth <= 0)
-                {
-                    this.displayWidth = 1;
-                }
-
-                if (this.displayHeight <= 0)
-                {
-                    this.displayHeight = 1;
-                }
+            }
+            if (this.displayWidth <= 0)
+            {
+                this.displayWidth = 1;
+            }
+            if (this.displayHeight <= 0)
+            {
+                this.displayHeight = 1;
             }
 
             if (this.currentScreen != null)
@@ -1468,7 +1443,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
         catch (Exception exception)
         {
-            logger.error((String)"Couldn\'t toggle fullscreen", (Throwable)exception);
+            logger.error( "Couldn't toggle fullscreen", exception);
         }
     }
 
@@ -1536,7 +1511,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         {
             if (this.thePlayer.getHealth() <= 0.0F)
             {
-                this.displayGuiScreen((GuiScreen)null);
+                this.displayGuiScreen(null);
             }
             else if (this.thePlayer.isPlayerSleeping() && this.theWorld != null)
             {
@@ -1545,7 +1520,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
         else if (this.currentScreen != null && this.currentScreen instanceof GuiSleepMP && !this.thePlayer.isPlayerSleeping())
         {
-            this.displayGuiScreen((GuiScreen)null);
+            this.displayGuiScreen(null);
         }
 
         if (this.currentScreen != null)
@@ -1563,13 +1538,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             {
                 CrashReport crashreport = CrashReport.makeCrashReport(throwable1, "Updating screen events");
                 CrashReportCategory crashreportcategory = crashreport.makeCategory("Affected screen");
-                crashreportcategory.addCrashSectionCallable("Screen name", new Callable<String>()
-                {
-                    public String call() throws Exception
-                    {
-                        return Minecraft.this.currentScreen.getClass().getCanonicalName();
-                    }
-                });
+                crashreportcategory.addCrashSectionCallable("Screen name", () -> Minecraft.this.currentScreen.getClass().getCanonicalName());
                 throw new ReportedException(crashreport);
             }
 
@@ -1583,13 +1552,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 {
                     CrashReport crashreport1 = CrashReport.makeCrashReport(throwable, "Ticking screen");
                     CrashReportCategory crashreportcategory1 = crashreport1.makeCategory("Affected screen");
-                    crashreportcategory1.addCrashSectionCallable("Screen name", new Callable<String>()
-                    {
-                        public String call() throws Exception
-                        {
-                            return Minecraft.this.currentScreen.getClass().getCanonicalName();
-                        }
-                    });
+                    crashreportcategory1.addCrashSectionCallable("Screen name", () -> Minecraft.this.currentScreen.getClass().getCanonicalName());
                     throw new ReportedException(crashreport1);
                 }
             }
@@ -1651,8 +1614,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                             this.setIngameFocus();
                         }
                     }
-                    else if (this.currentScreen != null)
-                    {
+                    else {
                         this.currentScreen.handleMouseInput();
                     }
                 }
@@ -1779,12 +1741,12 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                             this.gameSettings.saveOptions();
                         }
 
-                        if (k == 65)
+                        if (GameSettings.isKeyDown(this.gameSettings.hideMenu))
                         {
                             this.gameSettings.hideGUI = !this.gameSettings.hideGUI;
                         }
 
-                        if (k == 61)
+                        if (GameSettings.isKeyDown(this.gameSettings.debugCam))
                         {
                             this.gameSettings.showDebugInfo = !this.gameSettings.showDebugInfo;
                             this.gameSettings.showDebugProfilerChart = GuiScreen.isShiftKeyDown();

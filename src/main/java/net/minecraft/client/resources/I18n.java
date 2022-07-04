@@ -2,22 +2,19 @@ package net.minecraft.client.resources;
 
 import java.util.Map;
 
-public class I18n
-{
+public class I18n {
+
     private static Locale i18nLocale;
 
-    static void setLocale(Locale i18nLocaleIn)
-    {
-        i18nLocale = i18nLocaleIn;
+    static void setLocale() {
+        i18nLocale = LanguageManager.currentLocale;
     }
 
-    public static String format(String translateKey, Object... parameters)
-    {
+    public static String format(String translateKey, Object... parameters) {
         return i18nLocale.formatMessage(translateKey, parameters);
     }
 
-    public static Map getLocaleProperties()
-    {
+    public static Map<String, String> getLocaleProperties() {
         return i18nLocale.properties;
     }
 }
