@@ -73,7 +73,6 @@ public class GameSettings {
     public boolean chatLinks = true;
     public boolean chatLinksPrompt = true;
     public float chatOpacity = 1.0F;
-    public boolean snooperEnabled = true;
     public boolean fullScreen;
     public boolean enableVsync = true;
     public boolean useVbo = false;
@@ -454,11 +453,6 @@ public class GameSettings {
             this.chatLinksPrompt = !this.chatLinksPrompt;
         }
 
-        if (settingsOption == GameSettings.Options.SNOOPER_ENABLED)
-        {
-            this.snooperEnabled = !this.snooperEnabled;
-        }
-
         if (settingsOption == GameSettings.Options.TOUCHSCREEN)
         {
             this.touchscreen = !this.touchscreen;
@@ -535,9 +529,6 @@ public class GameSettings {
 
             case CHAT_LINKS_PROMPT:
                 return this.chatLinksPrompt;
-
-            case SNOOPER_ENABLED:
-                return this.snooperEnabled;
 
             case USE_FULLSCREEN:
                 return this.fullScreen;
@@ -824,11 +815,6 @@ public class GameSettings {
                                 this.chatOpacity = this.parseFloat(astring[1]);
                             }
 
-                            if (astring[0].equals("snooperEnabled"))
-                            {
-                                this.snooperEnabled = astring[1].equals("true");
-                            }
-
                             if (astring[0].equals("fullscreen"))
                             {
                                 this.fullScreen = astring[1].equals("true");
@@ -1045,7 +1031,6 @@ public class GameSettings {
             printwriter.println("chatLinks:" + this.chatLinks);
             printwriter.println("chatLinksPrompt:" + this.chatLinksPrompt);
             printwriter.println("chatOpacity:" + this.chatOpacity);
-            printwriter.println("snooperEnabled:" + this.snooperEnabled);
             printwriter.println("fullscreen:" + this.fullScreen);
             printwriter.println("enableVsync:" + this.enableVsync);
             printwriter.println("useVbo:" + this.useVbo);
@@ -2923,7 +2908,6 @@ public class GameSettings {
         CHAT_LINKS("options.chat.links", false, true),
         CHAT_OPACITY("options.chat.opacity", true, false),
         CHAT_LINKS_PROMPT("options.chat.links.prompt", false, true),
-        SNOOPER_ENABLED("options.snooper", false, true),
         USE_FULLSCREEN("options.fullscreen", false, true),
         ENABLE_VSYNC("options.vsync", false, true),
         USE_VBO("options.vbo", false, true),

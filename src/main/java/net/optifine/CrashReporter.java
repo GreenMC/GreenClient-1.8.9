@@ -4,9 +4,9 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.optifine.http.FileUploadThread;
-import net.optifine.http.IFileUploadListener;
 import net.optifine.shaders.Shaders;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,24 +41,13 @@ public class CrashReporter
                 return;
             }
 
-            if (!gamesettings.snooperEnabled)
-            {
-                return;
-            }
-
             String s = "http://optifine.net/crashReport";
             String s1 = makeReport(crashReport);
-            byte[] abyte = s1.getBytes("ASCII");
-            IFileUploadListener ifileuploadlistener = new IFileUploadListener()
-            {
-                public void fileUploadFinished(String url, byte[] content, Throwable exception)
-                {
-                }
-            };
-            Map map = new HashMap();
+            Map<String, String> map = new HashMap<>();
             map.put("OF-Version", Config.getVersion());
             map.put("OF-Summary", makeSummary(crashReport));
-            FileUploadThread fileuploadthread = new FileUploadThread(s, map, abyte, ifileuploadlistener);
+
+            FileUploadThread fileuploadthread = new FileUploadThread(s, map, s1.getBytes(StandardCharsets.US_ASCII), (url, content, exception) -> {});
             fileuploadthread.setPriority(10);
             fileuploadthread.start();
             Thread.sleep(1000L);
@@ -71,13 +60,11 @@ public class CrashReporter
 
     private static String makeReport(CrashReport crashReport)
     {
-        StringBuffer stringbuffer = new StringBuffer();
-        stringbuffer.append("OptiFineVersion: " + Config.getVersion() + "\n");
-        stringbuffer.append("Summary: " + makeSummary(crashReport) + "\n");
-        stringbuffer.append("\n");
-        stringbuffer.append(crashReport.getCompleteReport());
-        stringbuffer.append("\n");
-        return stringbuffer.toString();
+        return "OptiFineVersion: " + Config.getVersion() + "\n" +
+                "Summary: " + makeSummary(crashReport) + "\n" +
+                "\n" +
+                crashReport.getCompleteReport() +
+                "\n";
     }
 
     private static String makeSummary(CrashReport crashReport)
@@ -98,8 +85,7 @@ public class CrashReporter
                 s = astacktraceelement[0].toString().trim();
             }
 
-            String s1 = throwable.getClass().getName() + ": " + throwable.getMessage() + " (" + crashReport.getDescription() + ")" + " [" + s + "]";
-            return s1;
+            return throwable.getClass().getName() + ": " + throwable.getMessage() + " (" + crashReport.getDescription() + ")" + " [" + s + "]";
         }
     }
 
