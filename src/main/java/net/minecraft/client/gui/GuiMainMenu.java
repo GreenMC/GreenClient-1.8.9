@@ -34,11 +34,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 {
-    private static final AtomicInteger field_175373_f = new AtomicInteger(0);
     private static final Logger logger = LogManager.getLogger();
     private static final Random RANDOM = new Random();
     private float updateCounter;

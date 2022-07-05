@@ -64,11 +64,11 @@ ofDynamicLights:3
 ofScreenshotSize:1
 ofCustomEntityModels:true
 ofCustomGuis:true
-ofShowGlErrors:true
+ofShowGlErrors:false
 ofFullscreenMode:Default
 ofFastMath:false
 ofFastRender:false
 ofTranslucentBlocks:0
 key_of.key.zoom:46
-key_Hide Menu:61
-key_Debug Cam:59
+key_Debug Cam:61
+key_Hide Menu:59

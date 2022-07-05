@@ -17,8 +17,8 @@ public class ToggleRedThingCommand extends Command {
 
     @Override
     public boolean execute() {
-        minecraft.toggleRedThing();
-        sendMessage("Scoreboarddaki kırmızı skorları görme durumu artık: " + minecraft.redThing);
+        mc.toggleRedThing();
+        sendMessage("Scoreboarddaki kırmızı skorları görme durumu artık: " + mc.redThing);
         return true;
     }
 

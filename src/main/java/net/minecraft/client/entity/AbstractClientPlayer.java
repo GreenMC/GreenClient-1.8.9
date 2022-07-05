@@ -22,16 +22,13 @@ import net.optifine.player.CapeUtils;
 import net.optifine.player.PlayerConfigurations;
 import net.optifine.reflect.Reflector;
 
-import java.io.File;
+public abstract class AbstractClientPlayer extends EntityPlayer {
 
-public abstract class AbstractClientPlayer extends EntityPlayer
-{
     private NetworkPlayerInfo playerInfo;
     private ResourceLocation locationOfCape = null;
     private long reloadCapeTimeMs = 0L;
     private boolean elytraOfCape = false;
-    private String nameClear = null;
-    private static final ResourceLocation TEXTURE_ELYTRA = new ResourceLocation("textures/entity/elytra.png");
+    private String nameClear;
 
     public AbstractClientPlayer(World worldIn, GameProfile playerProfile)
     {
@@ -58,18 +55,15 @@ public abstract class AbstractClientPlayer extends EntityPlayer
         return this.getPlayerInfo() != null;
     }
 
-    protected NetworkPlayerInfo getPlayerInfo()
-    {
-        if (this.playerInfo == null)
-        {
+    protected NetworkPlayerInfo getPlayerInfo() {
+        if (this.playerInfo == null) {
             this.playerInfo = Minecraft.getMinecraft().getNetHandler().getPlayerInfo(this.getUniqueID());
         }
 
         return this.playerInfo;
     }
 
-    public boolean hasSkin()
-    {
+    public boolean hasSkin() {
         NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
         return networkplayerinfo != null && networkplayerinfo.hasLocationSkin();
     }
@@ -113,7 +107,7 @@ public abstract class AbstractClientPlayer extends EntityPlayer
 
         if (itextureobject == null)
         {
-            itextureobject = new ThreadDownloadImageData((File)null, String.format("http://skins.minecraft.net/MinecraftSkins/%s.png", new Object[] {StringUtils.stripControlCodes(username)}), DefaultPlayerSkin.getDefaultSkin(getOfflineUUID(username)), new ImageBufferDownload());
+            itextureobject = new ThreadDownloadImageData(null, String.format("http://skins.minecraft.net/MinecraftSkins/%s.png", StringUtils.stripControlCodes(username)), DefaultPlayerSkin.getDefaultSkin(getOfflineUUID(username)), new ImageBufferDownload());
             texturemanager.loadTexture(resourceLocationIn, itextureobject);
         }
 
@@ -165,52 +159,44 @@ public abstract class AbstractClientPlayer extends EntityPlayer
             f *= 1.0F - f1 * 0.15F;
         }
 
-        return Reflector.ForgeHooksClient_getOffsetFOV.exists() ? Reflector.callFloat(Reflector.ForgeHooksClient_getOffsetFOV, new Object[] {this, Float.valueOf(f)}): f;
+        return Reflector.ForgeHooksClient_getOffsetFOV.exists() ? Reflector.callFloat(Reflector.ForgeHooksClient_getOffsetFOV, this, f): f;
     }
 
-    public String getNameClear()
-    {
-        return this.nameClear;
+    public String getNameClear() {
+        return nameClear;
     }
 
-    public ResourceLocation getLocationOfCape()
-    {
-        return this.locationOfCape;
+    public ResourceLocation getLocationOfCape() {
+        return locationOfCape;
     }
 
-    public void setLocationOfCape(ResourceLocation p_setLocationOfCape_1_)
-    {
-        this.locationOfCape = p_setLocationOfCape_1_;
+    public void setLocationOfCape(ResourceLocation capeLocation) {
+        this.locationOfCape = capeLocation;
     }
 
-    public boolean hasElytraCape()
-    {
+    public boolean hasElytraCape() {
         ResourceLocation resourcelocation = this.getLocationCape();
-        return resourcelocation == null ? false : (resourcelocation == this.locationOfCape ? this.elytraOfCape : true);
+
+        return resourcelocation != null && (resourcelocation != this.locationOfCape || this.elytraOfCape);
     }
 
-    public void setElytraOfCape(boolean p_setElytraOfCape_1_)
-    {
-        this.elytraOfCape = p_setElytraOfCape_1_;
+    public void setElytraOfCape(boolean elytraCape) {
+        this.elytraOfCape = elytraCape;
     }
 
-    public boolean isElytraOfCape()
-    {
+    public boolean isElytraOfCape() {
         return this.elytraOfCape;
     }
 
-    public long getReloadCapeTimeMs()
-    {
+    public long getReloadCapeTimeMs() {
         return this.reloadCapeTimeMs;
     }
 
-    public void setReloadCapeTimeMs(long p_setReloadCapeTimeMs_1_)
-    {
-        this.reloadCapeTimeMs = p_setReloadCapeTimeMs_1_;
+    public void setReloadCapeTimeMs(long reloadCapeTimeMs) {
+        this.reloadCapeTimeMs = reloadCapeTimeMs;
     }
 
-    public Vec3 getLook(float partialTicks)
-    {
+    public Vec3 getLook(float partialTicks) {
         return this.getVectorForRotation(this.rotationPitch, this.rotationYaw);
     }
 }

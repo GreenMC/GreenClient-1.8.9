@@ -5,7 +5,7 @@ import net.minecraft.util.ChatComponentText;
 
 public abstract class Command {
 
-    public Minecraft minecraft = Minecraft.getMinecraft();
+    protected Minecraft mc = Minecraft.getMinecraft();
 
     public abstract String getName();
 
@@ -13,8 +13,7 @@ public abstract class Command {
 
     public abstract String[] getAliases();
 
-    public void sendMessage(String message) {
-        minecraft.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(message));
+    protected void sendMessage(String message) {
+        mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(message));
     }
-
 }

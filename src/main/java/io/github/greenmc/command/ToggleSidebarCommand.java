@@ -17,8 +17,8 @@ public class ToggleSidebarCommand extends Command {
 
     @Override
     public boolean execute() {
-        minecraft.toggleSidebar();
-        sendMessage("Scoreboardı görmeme durumu artık: " + minecraft.sidebarDisabled);
+        mc.toggleSidebar();
+        sendMessage("Scoreboardı görmeme durumu artık: " + mc.sidebarDisabled);
         return true;
     }
 

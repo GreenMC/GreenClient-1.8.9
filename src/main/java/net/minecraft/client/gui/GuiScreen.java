@@ -43,7 +43,7 @@ import java.util.Set;
 public abstract class GuiScreen extends Gui implements GuiYesNoCallback
 {
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final Set<String> PROTOCOLS = Sets.newHashSet(new String[] {"http", "https"});
+    private static final Set<String> PROTOCOLS = Sets.newHashSet("http", "https");
     private static final Splitter NEWLINE_SPLITTER = Splitter.on('\n');
     protected Minecraft mc;
     protected RenderItem itemRender;
@@ -59,24 +59,16 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
     private int touchValue;
     private URI clickedLinkURI;
 
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    {
-        for (int i = 0; i < this.buttonList.size(); ++i)
-        {
-            ((GuiButton)this.buttonList.get(i)).drawButton(this.mc, mouseX, mouseY);
-        }
-
-        for (int j = 0; j < this.labelList.size(); ++j)
-        {
-            ((GuiLabel)this.labelList.get(j)).drawLabel(this.mc, mouseX, mouseY);
-        }
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        buttonList.forEach(guiButton -> guiButton.drawButton(mc, mouseX, mouseY));
+        labelList.forEach(guiLabel -> guiLabel.drawLabel(mc, mouseX, mouseY));
     }
 
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
         if (keyCode == 1)
         {
-            this.mc.displayGuiScreen((GuiScreen)null);
+            this.mc.displayGuiScreen(null);
 
             if (this.mc.currentScreen == null)
             {
@@ -89,14 +81,14 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
     {
         try
         {
-            Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents((Object)null);
+            Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
 
             if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.stringFlavor))
             {
                 return (String)transferable.getTransferData(DataFlavor.stringFlavor);
             }
         }
-        catch (Exception var1)
+        catch (Exception ignored)
         {
             ;
         }
@@ -111,11 +103,10 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
             try
             {
                 StringSelection stringselection = new StringSelection(copyText);
-                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringselection, (ClipboardOwner)null);
+                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringselection, null);
             }
-            catch (Exception var2)
+            catch (Exception ignored)
             {
-                ;
             }
         }
     }
@@ -141,7 +132,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
 
     protected void drawCreativeTabHoveringText(String tabName, int mouseX, int mouseY)
     {
-        this.drawHoveringText(Arrays.<String>asList(new String[] {tabName}), mouseX, mouseY);
+        this.drawHoveringText(Arrays.asList(tabName), mouseX, mouseY);
     }
 
     protected void drawHoveringText(List<String> textLines, int x, int y)
@@ -200,7 +191,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
 
             for (int k1 = 0; k1 < textLines.size(); ++k1)
             {
-                String s1 = (String)textLines.get(k1);
+                String s1 = textLines.get(k1);
                 this.fontRendererObj.drawStringWithShadow(s1, (float)l1, (float)i2, -1);
 
                 if (k1 == 0)
@@ -234,14 +225,14 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
                 {
                     NBTBase nbtbase = JsonToNBT.getTagFromJson(hoverevent.getValue().getUnformattedText());
 
-                    if (nbtbase instanceof NBTTagCompound)
+                    if (nbtbase != null)
                     {
                         itemstack = ItemStack.loadItemStackFromNBT((NBTTagCompound)nbtbase);
                     }
                 }
-                catch (NBTException var11)
+                catch (NBTException ignored)
                 {
-                    ;
+
                 }
 
                 if (itemstack != null)
@@ -325,55 +316,39 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
     }
 
     protected boolean handleComponentClick(IChatComponent component) {
-        if (component == null) {
-            return false;
-        } else {
+        if (component != null) {
             ClickEvent clickevent = component.getChatStyle().getChatClickEvent();
 
-            if (isShiftKeyDown())
-            {
-                if (component.getChatStyle().getInsertion() != null)
-                {
+            if (isShiftKeyDown()) {
+                if (component.getChatStyle().getInsertion() != null) {
                     this.setText(component.getChatStyle().getInsertion(), false);
                 }
-            }
-            else if (clickevent != null)
-            {
-                if (clickevent.getAction() == ClickEvent.Action.OPEN_URL)
-                {
-                    if (!this.mc.gameSettings.chatLinks)
-                    {
+            } else if (clickevent != null) {
+                if (clickevent.getAction() == ClickEvent.Action.OPEN_URL) {
+                    if (!this.mc.gameSettings.chatLinks) {
                         return false;
                     }
 
-                    try
-                    {
+                    try {
                         URI uri = new URI(clickevent.getValue());
-                        String s = uri.getScheme();
+                        String scheme = uri.getScheme();
 
-                        if (s == null)
-                        {
+                        if (scheme == null) {
                             throw new URISyntaxException(clickevent.getValue(), "Missing protocol");
                         }
 
-                        if (!PROTOCOLS.contains(s.toLowerCase()))
-                        {
-                            throw new URISyntaxException(clickevent.getValue(), "Unsupported protocol: " + s.toLowerCase());
+                        if (!PROTOCOLS.contains(scheme.toLowerCase())) {
+                            throw new URISyntaxException(clickevent.getValue(), "Unsupported protocol: " + scheme.toLowerCase());
                         }
 
-                        if (this.mc.gameSettings.chatLinksPrompt)
-                        {
+                        if (this.mc.gameSettings.chatLinksPrompt) {
                             this.clickedLinkURI = uri;
                             this.mc.displayGuiScreen(new GuiConfirmOpenLink(this, clickevent.getValue(), 31102009, false));
-                        }
-                        else
-                        {
+                        } else {
                             this.openWebLink(uri);
                         }
-                    }
-                    catch (URISyntaxException urisyntaxexception)
-                    {
-                        LOGGER.error(("Can\'t open url for " + clickevent), (Throwable)urisyntaxexception);
+                    } catch (URISyntaxException urisyntaxexception) {
+                        LOGGER.error(("Can't open url for " + clickevent), urisyntaxexception);
                     }
                 } else if (clickevent.getAction() == ClickEvent.Action.OPEN_FILE) {
                     URI uri1 = (new File(clickevent.getValue())).toURI();
@@ -393,8 +368,8 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
                 return true;
             }
 
-            return false;
         }
+        return false;
     }
 
     public void sendChatMessage(String msg)

@@ -2,19 +2,16 @@ package net.minecraft.client.network;
 
 import com.google.common.base.Objects;
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.client.resources.SkinManager;
 import net.minecraft.network.play.server.S38PacketPlayerListItem;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldSettings;
 
-public class NetworkPlayerInfo
-{
+public class NetworkPlayerInfo {
+
     private final GameProfile gameProfile;
     private WorldSettings.GameType gameType;
     private int responseTime;
@@ -29,119 +26,91 @@ public class NetworkPlayerInfo
     private long field_178868_l = 0L;
     private long field_178869_m = 0L;
 
-    public NetworkPlayerInfo(GameProfile p_i46294_1_)
-    {
-        this.gameProfile = p_i46294_1_;
+    public NetworkPlayerInfo(S38PacketPlayerListItem.AddPlayerData playerData) {
+        this.gameProfile = playerData.getProfile();
+        this.gameType = playerData.getGameMode();
+        this.responseTime = playerData.getPing();
+        this.displayName = playerData.getDisplayName();
     }
 
-    public NetworkPlayerInfo(S38PacketPlayerListItem.AddPlayerData p_i46295_1_)
-    {
-        this.gameProfile = p_i46295_1_.getProfile();
-        this.gameType = p_i46295_1_.getGameMode();
-        this.responseTime = p_i46295_1_.getPing();
-        this.displayName = p_i46295_1_.getDisplayName();
-    }
-
-    public GameProfile getGameProfile()
-    {
+    public GameProfile getGameProfile() {
         return this.gameProfile;
     }
 
-    public WorldSettings.GameType getGameType()
-    {
+    public WorldSettings.GameType getGameType() {
         return this.gameType;
     }
 
-    public int getResponseTime()
-    {
+    public int getResponseTime() {
         return this.responseTime;
     }
 
-    protected void setGameType(WorldSettings.GameType p_178839_1_)
-    {
-        this.gameType = p_178839_1_;
+    protected void setGameType(WorldSettings.GameType gameType) {
+        this.gameType = gameType;
     }
 
-    protected void setResponseTime(int p_178838_1_)
-    {
-        this.responseTime = p_178838_1_;
+    protected void setResponseTime(int responseTime) {
+        this.responseTime = responseTime;
     }
 
-    public boolean hasLocationSkin()
-    {
+    public boolean hasLocationSkin() {
         return this.locationSkin != null;
     }
 
-    public String getSkinType()
-    {
-        return this.skinType == null ? DefaultPlayerSkin.getSkinType(this.gameProfile.getId()) : this.skinType;
+    public String getSkinType() {
+        return this.skinType == null ? DefaultPlayerSkin.getSkinType(gameProfile.getId()) : skinType;
     }
 
-    public ResourceLocation getLocationSkin()
-    {
-        if (this.locationSkin == null)
-        {
-            this.loadPlayerTextures();
+    public ResourceLocation getLocationSkin() {
+        if (locationSkin == null) {
+            loadPlayerTextures();
         }
 
-        return (ResourceLocation)Objects.firstNonNull(this.locationSkin, DefaultPlayerSkin.getDefaultSkin(this.gameProfile.getId()));
+        return Objects.firstNonNull(locationSkin, DefaultPlayerSkin.getDefaultSkin(gameProfile.getId()));
     }
 
-    public ResourceLocation getLocationCape()
-    {
-        if (this.locationCape == null)
-        {
-            this.loadPlayerTextures();
+    public ResourceLocation getLocationCape() {
+        if (locationCape == null) {
+            loadPlayerTextures();
         }
 
-        return this.locationCape;
+        return locationCape;
     }
 
-    public ScorePlayerTeam getPlayerTeam()
-    {
-        return Minecraft.getMinecraft().theWorld.getScoreboard().getPlayersTeam(this.getGameProfile().getName());
+    public ScorePlayerTeam getPlayerTeam() {
+        return Minecraft.getMinecraft().theWorld.getScoreboard().getPlayersTeam(getGameProfile().getName());
     }
 
-    protected void loadPlayerTextures()
-    {
-        synchronized (this)
-        {
-            if (!this.playerTexturesLoaded)
-            {
-                this.playerTexturesLoaded = true;
-                Minecraft.getMinecraft().getSkinManager().loadProfileTextures(this.gameProfile, new SkinManager.SkinAvailableCallback()
-                {
-                    public void skinAvailable(Type p_180521_1_, ResourceLocation location, MinecraftProfileTexture profileTexture)
-                    {
-                        switch (p_180521_1_)
-                        {
-                            case SKIN:
-                                NetworkPlayerInfo.this.locationSkin = location;
-                                NetworkPlayerInfo.this.skinType = profileTexture.getMetadata("model");
+    protected void loadPlayerTextures() {
+        synchronized (this) {
+            if (!playerTexturesLoaded) {
+                playerTexturesLoaded = true;
 
-                                if (NetworkPlayerInfo.this.skinType == null)
-                                {
-                                    NetworkPlayerInfo.this.skinType = "default";
-                                }
+                Minecraft.getMinecraft().getSkinManager().loadProfileTextures(this.gameProfile, (p_180521_1_, location, profileTexture) -> {
+                    switch (p_180521_1_) {
+                        case SKIN:
+                            NetworkPlayerInfo.this.locationSkin = location;
+                            NetworkPlayerInfo.this.skinType = profileTexture.getMetadata("model");
 
-                                break;
+                            if (NetworkPlayerInfo.this.skinType == null) {
+                                NetworkPlayerInfo.this.skinType = "default";
+                            }
 
-                            case CAPE:
-                                NetworkPlayerInfo.this.locationCape = location;
-                        }
+                            break;
+
+                        case CAPE:
+                            NetworkPlayerInfo.this.locationCape = location;
                     }
                 }, true);
             }
         }
     }
 
-    public void setDisplayName(IChatComponent displayNameIn)
-    {
+    public void setDisplayName(IChatComponent displayNameIn) {
         this.displayName = displayNameIn;
     }
 
-    public IChatComponent getDisplayName()
-    {
+    public IChatComponent getDisplayName() {
         return this.displayName;
     }
 

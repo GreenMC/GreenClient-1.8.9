@@ -1,33 +1,28 @@
 package net.minecraft.client.gui;
 
-import com.google.common.collect.Lists;
 import net.minecraft.network.play.client.C14PacketTabComplete;
 import net.minecraft.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class GuiChat extends GuiScreen
-{
-    private String historyBuffer = "";
-    private int sentHistoryCursor = -1;
-    private boolean playerNamesFound;
-    private boolean waitingOnAutocomplete;
-    private int autocompleteIndex;
-    private List<String> foundPlayerNames = Lists.newArrayList();
+public class GuiChat extends GuiScreen {
+
     protected GuiTextField inputField;
-    private String defaultInputFieldText = "";
 
-    public GuiChat() {}
+    private String defaultInputFieldText = "", historyBuffer = "";
+    private int sentHistoryCursor = -1, autocompleteIndex;
+    private boolean playerNamesFound, waitingOnAutocomplete;
+    private final List<String> foundPlayerNames = new ArrayList<>();
 
-    public GuiChat(String defaultText)
-    {
+    public GuiChat() {
+    }
+
+    public GuiChat(String defaultText) {
         this.defaultInputFieldText = defaultText;
     }
 
@@ -44,45 +39,34 @@ public class GuiChat extends GuiScreen
 
     public void onGuiClosed() {
         Keyboard.enableRepeatEvents(false);
-        this.mc.ingameGUI.getChatGUI().resetScroll();
+        mc.ingameGUI.getChatGUI().resetScroll();
     }
 
     public void updateScreen() {
-        this.inputField.updateCursorCounter();
+        inputField.updateCursorCounter();
     }
 
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        this.waitingOnAutocomplete = false;
+        waitingOnAutocomplete = false;
 
         if (keyCode == 15) {
-            this.autocompletePlayerNames();
+            autocompletePlayerNames();
         } else {
-            this.playerNamesFound = false;
+            playerNamesFound = false;
         }
 
         if (keyCode == 1) {
             this.mc.displayGuiScreen(null);
-
         } else if (keyCode != 28 && keyCode != 156) {
-
-            if (keyCode == 200)
-            {
+            if (keyCode == 200) {
                 this.getSentHistory(-1);
-            }
-            else if (keyCode == 208)
-            {
+            } else if (keyCode == 208) {
                 this.getSentHistory(1);
-            }
-            else if (keyCode == 201)
-            {
+            } else if (keyCode == 201) {
                 this.mc.ingameGUI.getChatGUI().scroll(this.mc.ingameGUI.getChatGUI().getLineCount() - 1);
-            }
-            else if (keyCode == 209)
-            {
+            } else if (keyCode == 209) {
                 this.mc.ingameGUI.getChatGUI().scroll(-this.mc.ingameGUI.getChatGUI().getLineCount() + 1);
-            }
-            else
-            {
+            } else {
                 this.inputField.textboxKeyTyped(typedChar, keyCode);
             }
         } else {
@@ -102,18 +86,15 @@ public class GuiChat extends GuiScreen
 
         if (i != 0) {
 
-            if (i > 1)
-            {
+            if (i > 1) {
                 i = 1;
             }
 
-            if (i < -1)
-            {
+            if (i < -1) {
                 i = -1;
             }
 
-            if (!isShiftKeyDown())
-            {
+            if (!isShiftKeyDown()) {
                 i *= 7;
             }
 
@@ -122,19 +103,10 @@ public class GuiChat extends GuiScreen
     }
 
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        System.out.println(mouseButton);
         if (mouseButton == 0) {
             IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            if (isCtrlKeyDown()) {
-                StringSelection stringSelection = new StringSelection(ichatcomponent.getUnformattedText());
-                clipboard.setContents(stringSelection, null);
-            } else if (isShiftKeyDown()) {
-                StringSelection stringSelection = new StringSelection(ichatcomponent.getFormattedText());
-                clipboard.setContents(stringSelection, null);
-            } else {
-                handleComponentClick(ichatcomponent);
-            }
+
+            handleComponentClick(ichatcomponent);
         }
 
         this.inputField.mouseClicked(mouseX, mouseY, mouseButton);

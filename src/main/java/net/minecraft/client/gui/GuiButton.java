@@ -14,17 +14,22 @@ public class GuiButton extends Gui
     public int xPosition;
     public int yPosition;
     public String displayString;
-    public int id;
+    public int id, color;
     public boolean enabled;
     public boolean visible;
     protected boolean hovered;
 
     public GuiButton(int buttonId, int x, int y, String buttonText)
     {
-        this(buttonId, x, y, 200, 20, buttonText);
+        this (buttonId, x, y, 200, 20, buttonText);
     }
 
     public GuiButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText)
+    {
+        this (buttonId, x, y, widthIn, heightIn, buttonText, 0);
+    }
+
+    public GuiButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, int color)
     {
         this.width = 200;
         this.height = 20;
@@ -36,6 +41,7 @@ public class GuiButton extends Gui
         this.width = widthIn;
         this.height = heightIn;
         this.displayString = buttonText;
+        this.color = color;
     }
 
     protected int getHoverState(boolean mouseOver)
@@ -60,7 +66,7 @@ public class GuiButton extends Gui
         {
             FontRenderer fontrenderer = mc.fontRendererObj;
             mc.getTextureManager().bindTexture(buttonTextures);
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.color(1.0F, 51.0F, 1.0F, 1.0F);
             this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
             int i = this.getHoverState(this.hovered);
             GlStateManager.enableBlend();
@@ -79,6 +85,8 @@ public class GuiButton extends Gui
             {
                 j = 16777120;
             }
+
+            if (color != 0) j = color;
 
             this.drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, j);
         }

@@ -17,8 +17,8 @@ public class ToggleInvisCommand extends Command {
 
     @Override
     public boolean execute() {
-        minecraft.seeInvis = !minecraft.seeInvis;
-        sendMessage("Görünmezleri görme durumu artık: " + minecraft.seeInvis);
+        mc.seeInvis = !mc.seeInvis;
+        sendMessage("Görünmezleri görme durumu artık: " + mc.seeInvis);
         return true;
     }
 
@@ -26,5 +26,4 @@ public class ToggleInvisCommand extends Command {
     public String[] getAliases() {
         return aliases;
     }
-
 }

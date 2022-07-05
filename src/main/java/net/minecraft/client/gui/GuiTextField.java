@@ -31,7 +31,7 @@ public class GuiTextField extends Gui
     private int disabledColor = 7368816;
     private boolean visible = true;
     private GuiPageButtonList.GuiResponder field_175210_x;
-    private Predicate<String> validator = Predicates.<String>alwaysTrue();
+    private Predicate<String> validator = Predicates.alwaysTrue();
 
     public GuiTextField(int componentId, FontRenderer fontrendererObj, int x, int y, int par5Width, int par6Height)
     {
@@ -77,13 +77,12 @@ public class GuiTextField extends Gui
 
     public String getSelectedText()
     {
-        int i = this.cursorPosition < this.selectionEnd ? this.cursorPosition : this.selectionEnd;
-        int j = this.cursorPosition < this.selectionEnd ? this.selectionEnd : this.cursorPosition;
+        int i = Math.min(this.cursorPosition, this.selectionEnd);
+        int j = Math.max(this.cursorPosition, this.selectionEnd);
         return this.text.substring(i, j);
     }
 
-    public void setValidator(Predicate<String> theValidator)
-    {
+    public void setValidator(Predicate<String> theValidator) {
         this.validator = theValidator;
     }
 
@@ -91,8 +90,8 @@ public class GuiTextField extends Gui
     {
         String s = "";
         String s1 = ChatAllowedCharacters.filterAllowedCharacters(p_146191_1_);
-        int i = this.cursorPosition < this.selectionEnd ? this.cursorPosition : this.selectionEnd;
-        int j = this.cursorPosition < this.selectionEnd ? this.selectionEnd : this.cursorPosition;
+        int i = Math.min(this.cursorPosition, this.selectionEnd);
+        int j = Math.max(this.cursorPosition, this.selectionEnd);
         int k = this.maxStringLength - this.text.length() - (i - j);
         int l = 0;
 
@@ -267,34 +266,25 @@ public class GuiTextField extends Gui
         this.setCursorPosition(this.text.length());
     }
 
-    public boolean textboxKeyTyped(char p_146201_1_, int p_146201_2_)
-    {
-        if (!this.isFocused)
-        {
+    public boolean textboxKeyTyped(char p_146201_1_, int p_146201_2_) {
+        if (!this.isFocused) {
             return false;
-        }
-        else if (GuiScreen.isKeyComboCtrlA(p_146201_2_))
-        {
+        } else if (GuiScreen.isKeyComboCtrlA(p_146201_2_)) {
             this.setCursorPositionEnd();
             this.setSelectionPos(0);
             return true;
-        }
-        else if (GuiScreen.isKeyComboCtrlC(p_146201_2_))
-        {
+
+        } else if (GuiScreen.isKeyComboCtrlC(p_146201_2_)) {
             GuiScreen.setClipboardString(this.getSelectedText());
             return true;
-        }
-        else if (GuiScreen.isKeyComboCtrlV(p_146201_2_))
-        {
-            if (this.isEnabled)
-            {
+
+        } else if (GuiScreen.isKeyComboCtrlV(p_146201_2_)) {
+            if (this.isEnabled) {
                 this.writeText(GuiScreen.getClipboardString());
             }
 
             return true;
-        }
-        else if (GuiScreen.isKeyComboCtrlX(p_146201_2_))
-        {
+        } else if (GuiScreen.isKeyComboCtrlX(p_146201_2_)) {
             GuiScreen.setClipboardString(this.getSelectedText());
 
             if (this.isEnabled)
@@ -445,7 +435,6 @@ public class GuiTextField extends Gui
             }
 
             String s = this.fontRendererInstance.trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
-            this.setCursorPosition(this.fontRendererInstance.trimStringToWidth(s, i).length() + this.lineScrollOffset);
         }
     }
 
@@ -551,10 +540,10 @@ public class GuiTextField extends Gui
         GlStateManager.enableColorLogic();
         GlStateManager.colorLogicOp(5387);
         worldrenderer.begin(7, DefaultVertexFormats.POSITION);
-        worldrenderer.pos((double)p_146188_1_, (double)p_146188_4_, 0.0D).endVertex();
-        worldrenderer.pos((double)p_146188_3_, (double)p_146188_4_, 0.0D).endVertex();
-        worldrenderer.pos((double)p_146188_3_, (double)p_146188_2_, 0.0D).endVertex();
-        worldrenderer.pos((double)p_146188_1_, (double)p_146188_2_, 0.0D).endVertex();
+        worldrenderer.pos(p_146188_1_, p_146188_4_, 0.0D).endVertex();
+        worldrenderer.pos(p_146188_3_, p_146188_4_, 0.0D).endVertex();
+        worldrenderer.pos(p_146188_3_, p_146188_2_, 0.0D).endVertex();
+        worldrenderer.pos(p_146188_1_, p_146188_2_, 0.0D).endVertex();
         tessellator.draw();
         GlStateManager.disableColorLogic();
         GlStateManager.enableTexture2D();
