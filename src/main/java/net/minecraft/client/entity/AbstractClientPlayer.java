@@ -84,7 +84,7 @@ public abstract class AbstractClientPlayer extends EntityPlayer {
         {
             if (this.reloadCapeTimeMs != 0L && System.currentTimeMillis() > this.reloadCapeTimeMs)
             {
-                CapeUtils.reloadCape(this);
+                CapeUtils.downloadCape(this);
                 this.reloadCapeTimeMs = 0L;
             }
 

@@ -157,6 +157,7 @@ public class Minecraft implements IThreadListener {
     public final File mcDataDir;
     private final File fileAssets;
     private final String launchedVersion;
+    public String customCapeName;
     private final Proxy proxy;
     private ISaveFormat saveLoader;
     private static int debugFPS;

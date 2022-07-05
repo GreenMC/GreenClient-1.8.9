@@ -50,14 +50,16 @@ public class GuiCapeEditor extends GuiScreen {
 			String text = capeNameField.getText();
 
 			if (text != null) {
-				CapeUtils.downloadCape(mc.thePlayer, text);
+				mc.customCapeName = text;
+				CapeUtils.downloadCape(mc.thePlayer);
 
 				mc.displayGuiScreen(parentScreen);
 			}
 		}
 
 		if (button.id == 1) {
-			CapeUtils.reloadCape(mc.thePlayer);
+			mc.customCapeName = null;
+			CapeUtils.downloadCape(mc.thePlayer);
 
 			mc.displayGuiScreen(parentScreen);
 		}

@@ -14,10 +14,11 @@ import java.awt.image.BufferedImage;
 import java.util.regex.Pattern;
 
 public class CapeUtils {
+    private final static Minecraft mc = Minecraft.getMinecraft();
     private static final Pattern PATTERN_USERNAME = Pattern.compile("[a-zA-Z0-9_]+");
 
-    public static void downloadCape(AbstractClientPlayer player, String capeName) {
-        String playerName = player.getNameClear();
+    public static void downloadCape(AbstractClientPlayer player) {
+        String playerName = player.getNameClear(), capeName = mc.customCapeName != null ? mc.customCapeName : playerName;
 
         ResourceLocation resourcelocation = new ResourceLocation("capeof/" + playerName);
         TextureManager texturemanager = Config.getTextureManager();
@@ -33,7 +34,7 @@ public class CapeUtils {
         player.setElytraOfCape(false);
 
         if (playerName != null && !playerName.isEmpty() && !playerName.contains("\u0000") && PATTERN_USERNAME.matcher(playerName).matches()) {
-            String s1 = "http://s.optifine.net/capes/" + capeName + ".png";
+            String url = "http://s.optifine.net/capes/" + capeName + ".png";
             TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
             ITextureObject textureObject = textureManager.getTexture(resourcelocation);
 
@@ -55,16 +56,12 @@ public class CapeUtils {
             }
 
             CapeImageBuffer capeimagebuffer = new CapeImageBuffer(player, resourcelocation);
-            ThreadDownloadImageData imageData = new ThreadDownloadImageData(null, s1, null, capeimagebuffer);
+            ThreadDownloadImageData imageData = new ThreadDownloadImageData(null, url, null, capeimagebuffer);
             imageData.pipeline = true;
             textureManager.loadTexture(resourcelocation, imageData);
 
             player.setReloadCapeTimeMs(0);
         }
-    }
-
-    public static void downloadCape(AbstractClientPlayer player) {
-        downloadCape(player, player.getNameClear());
     }
 
     public static BufferedImage parseCape(BufferedImage img) {
@@ -83,9 +80,5 @@ public class CapeUtils {
 
     public static boolean isElytraCape(BufferedImage imageRaw, BufferedImage imageFixed) {
         return imageRaw.getWidth() > imageFixed.getHeight();
-    }
-
-    public static void reloadCape(AbstractClientPlayer player) {
-        downloadCape(player);
     }
 }
