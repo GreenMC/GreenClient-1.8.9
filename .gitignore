@@ -4,6 +4,7 @@ screenshots/
 shaderpacks/
 logs/
 build/
+.gradle/
 crash-reports/
 usercache.json
 servers.dat
