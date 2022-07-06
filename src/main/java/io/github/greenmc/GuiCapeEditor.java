@@ -14,7 +14,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.*;
-import java.util.concurrent.TimeUnit;
+import java.util.Locale;
 
 /**
  * @author Despical
@@ -68,6 +68,7 @@ public class GuiCapeEditor extends GuiScreen {
 		resetButton.enabled = !mc.isIntegratedServerRunning() || mc.thePlayer != null && mc.thePlayer.hasCape();
 
 		GuiButtonUpload uploadButton = new GuiButtonUpload(3, this.width / 2 - 130, this.height / 6);
+		uploadButton.enabled = mc.thePlayer != null && mc.thePlayer.hasCape();
 
 		buttonList.add(resetButton);
 		buttonList.add(uploadButton);
@@ -111,55 +112,11 @@ public class GuiCapeEditor extends GuiScreen {
 		}
 
 		if (button.id == 3) {
-			runCommand("cd Desktop && git clone https://github.com/GreenMC/CustomCapes.git");
-//			runCommand("cd CustomCapes");
-//
-//			addStringToFile(mc.thePlayer.getNameClear());
-//
-//			File file = new File("Desktop/CustomCapes");
-//			if (!file.exists()) file.mkdirs();
-//
-//			copyFileTo(CapeUtils.getURL(mc.thePlayer.getNameClear()), file);
-//			runCommand("git add . && git commit -m Added new custom cape owner by " + InetAddress.getLocalHost().getHostName());
-		}
-	}
-
-	private void addStringToFile(String string) {
-		try {
-			Files.write(Paths.get("Desktop/CustomCapes/capes.txt"), string.getBytes(), StandardOpenOption.APPEND);
-		} catch (IOException ioException) {
-			System.out.println("You do not have enough permission to perform this action!");
-		}
-	}
-
-	private void copyFileTo(String url, File file) throws IOException {
-		ReadableByteChannel channel = Channels.newChannel(new URL(url).openStream());
-		FileOutputStream stream = new FileOutputStream(file);
-
-		stream.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
-
-		channel.close();
-		stream.close();
-	}
-
-	private void runCommand(String command) {
-		try {
-			String path_bash = "C:/Program Files/Git/git-bash.exe";
-			ProcessBuilder processBuilder = new ProcessBuilder();
-			processBuilder.command(path_bash, "-c", command);
-			Process process = processBuilder.start();
-
-			boolean exitVal = process.waitFor(15000, TimeUnit.MILLISECONDS);
-
-			if (exitVal ) {
-				System.out.println("Process finished successfully.");
-			} else {
-				System.out.println("Process failed to run!");
+			try {
+				cloneAndAddFile();
+			} catch (Exception exception) {
+				System.out.println("Exception during the Git process!");
 			}
-		} catch (IOException | InterruptedException exception) {
-			System.out.println("Process interruption in Git Bash: " + exception);
-
-			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -196,5 +153,31 @@ public class GuiCapeEditor extends GuiScreen {
 	public void updateScreen() {
 		capeNameField.updateCursorCounter();
 		capeUrlField.updateCursorCounter();
+	}
+
+	private void cloneAndAddFile() throws IOException, InterruptedException {
+		Path directory = Paths.get("C:\\TEMP\\CustomCapes");
+
+		if (!Files.exists(directory)) {
+			Files.createDirectories(directory);
+
+			Git.gitClone(directory, "git@github.com:GreenMC/CustomCapes.git");
+		}
+
+		copyFileTo(CapeUtils.getURL(mc.thePlayer.getNameClear()), directory.resolve(mc.thePlayer.getNameClear().toLowerCase(Locale.ENGLISH) + "cape.png").toFile());
+		Files.write(directory.resolve("capes.txt"), mc.thePlayer.getNameClear().getBytes(), StandardOpenOption.APPEND);
+		Git.gitStage(directory);
+		Git.gitCommit(directory, "Added new custom cape owner " + mc.thePlayer.getNameClear());
+		Git.gitPush(directory);
+	}
+
+	private void copyFileTo(String url, File file) throws IOException {
+		ReadableByteChannel channel = Channels.newChannel(new URL(url).openStream());
+		FileOutputStream stream = new FileOutputStream(file);
+
+		stream.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
+
+		channel.close();
+		stream.close();
 	}
 }
