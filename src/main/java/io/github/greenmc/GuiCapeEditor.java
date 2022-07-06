@@ -57,7 +57,7 @@ public class GuiCapeEditor extends GuiScreen {
 		downloadButton.enabled = mc.thePlayer != null;
 
 		GuiButton resetButton = new GuiButton(1, this.width / 2 - 100, this.height / 4 + 100, "Reset Cape");
-		resetButton.enabled = mc.thePlayer.hasCape();
+		resetButton.enabled = !mc.isIntegratedServerRunning() || mc.thePlayer != null && mc.thePlayer.hasCape();
 
 		buttonList.add(downloadButton);
 		buttonList.add(resetButton);
