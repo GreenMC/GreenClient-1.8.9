@@ -1,6 +1,7 @@
 package net.optifine.player;
 
 import com.google.common.io.Files;
+import io.github.greenmc.util.FileUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
@@ -14,9 +15,6 @@ import org.apache.commons.io.Charsets;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -33,15 +31,8 @@ public class CapeUtils {
         customCapeOwners = new ArrayList<>();
 
         try {
-            ReadableByteChannel channel = Channels.newChannel(new URL("https://raw.githubusercontent.com/GreenMC/CustomCapes/master/capes.txt").openStream());
-            FileOutputStream stream = new FileOutputStream("capes.txt");
-
-            stream.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
-
-            channel.close();
-            stream.close();
-
             File temp = new File("capes.txt");
+            FileUtils.copyURLTo("https://raw.githubusercontent.com/GreenMC/CustomCapes/master/capes.txt", temp);
 
             customCapeOwners.addAll(Files.readLines(temp, Charsets.UTF_8));
 
@@ -54,8 +45,7 @@ public class CapeUtils {
     public static void downloadCape(AbstractClientPlayer player) {
         if (player == null) return;
 
-        String playerName = player.getNameClear(), capeName = mc.customCapeName, capeUrl = mc.customCapeUrl;
-
+        String playerName = player.getNameClear();
         ResourceLocation resourcelocation = new ResourceLocation("capeof/" + playerName);
         TextureManager texturemanager = Config.getTextureManager();
         ITextureObject itextureobject = texturemanager.getTexture(resourcelocation);
@@ -69,17 +59,9 @@ public class CapeUtils {
         player.setLocationOfCape(null);
 
         if (playerName != null && !playerName.isEmpty() && !playerName.contains("\u0000") && PATTERN_USERNAME.matcher(playerName).matches()) {
-            String url;
+            String url = getURL(playerName);
 
-            if (capeUrl != null) {
-                url = capeUrl;
-            } else if (capeName != null) {
-                url = "http://s.optifine.net/capes/" + capeName + ".png";
-            } else if (isCustomCape(playerName)) {
-                url = "https://raw.githubusercontent.com/GreenMC/CustomCapes/master/" + getCustomName(playerName) + ".png";
-            } else {
-                return;
-            }
+            if (url == null) return;
 
             TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
             ITextureObject textureObject = textureManager.getTexture(resourcelocation);
@@ -141,11 +123,12 @@ public class CapeUtils {
         return customCapeOwners.contains(name);
     }
 
-    private static String getCustomName(String name) {
+    public static String getCustomName(String name) {
         if (isCustomCape(name)) {
             name = name.toLowerCase(java.util.Locale.ENGLISH);
             return name.endsWith("_") ? name + "cape" : name + "_cape";
         }
+
         return null;
     }
 }

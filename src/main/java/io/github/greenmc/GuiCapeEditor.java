@@ -1,5 +1,6 @@
 package io.github.greenmc;
 
+import io.github.greenmc.util.FileUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiButtonUpload;
 import net.minecraft.client.gui.GuiScreen;
@@ -7,14 +8,8 @@ import net.minecraft.client.gui.GuiTextField;
 import net.optifine.player.CapeUtils;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.file.*;
-import java.util.Locale;
 
 /**
  * @author Despical
@@ -36,44 +31,44 @@ public class GuiCapeEditor extends GuiScreen {
 
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		if (this.capeNameField.isFocused()) {
-			this.capeNameField.textboxKeyTyped(typedChar, keyCode);
+		if (capeNameField.isFocused()) {
+			capeNameField.textboxKeyTyped(typedChar, keyCode);
 		}
 
-		if (this.capeUrlField.isFocused()) {
-			this.capeUrlField.textboxKeyTyped(typedChar, keyCode);
+		if (capeUrlField.isFocused()) {
+			capeUrlField.textboxKeyTyped(typedChar, keyCode);
 		}
 
 		if (keyCode == 28 || keyCode == 156) {
-			this.actionPerformed(this.buttonList.get(0));
+			actionPerformed(this.buttonList.get(0));
 		} else if (keyCode == 1) {
 			mc.displayGuiScreen(parentScreen);
 		}
 
-		buttonList.get(0).enabled = this.capeNameField.getText().length() > 0 || this.capeUrlField.getText().length() > 0;
+		buttonList.get(0).enabled = capeNameField.getText().length() > 0 || capeUrlField.getText().length() > 0;
 	}
 	@Override
 	public void initGui() {
-		capeNameField = new GuiTextField(0, this.fontRendererObj, this.width / 2 - 100, this.height / 6, 200, 20);
+		capeNameField = new GuiTextField(0, fontRendererObj, width / 2 - 100, height / 6, 200, 20);
 		capeNameField.setFocused(true);
 
-		capeUrlField = new GuiTextField(1, this.fontRendererObj, this.width / 2 - 100, this.height / 6 + 25, 200, 20);
+		capeUrlField = new GuiTextField(1, fontRendererObj, width / 2 - 100, height / 6 + 25, 200, 20);
 		capeUrlField.setMaxStringLength(Integer.MAX_VALUE);
 		capeUrlField.setFocused(false);
 
-		GuiButton downloadButton = new GuiButton(0, this.width / 2 - 100, this.height / 6 + 55, "Download Cape");
+		GuiButton downloadButton = new GuiButton(0, width / 2 - 100, height / 6 + 55, "Download Cape");
 		downloadButton.enabled = mc.thePlayer != null;
 
-		GuiButton resetButton = new GuiButton(1, this.width / 2 - 100, this.height / 4 + 100, "Reset Cape");
+		GuiButton resetButton = new GuiButton(1, width / 2 - 100, height / 4 + 100, "Reset Cape");
 		resetButton.enabled = !mc.isIntegratedServerRunning() || mc.thePlayer != null && mc.thePlayer.hasCape();
 
-		GuiButtonUpload uploadButton = new GuiButtonUpload(3, this.width / 2 - 130, this.height / 6);
+		GuiButtonUpload uploadButton = new GuiButtonUpload(3, this.width / 2 - 130, height / 6);
 		uploadButton.enabled = mc.thePlayer != null && mc.thePlayer.hasCape();
 
 		buttonList.add(resetButton);
 		buttonList.add(uploadButton);
 		buttonList.add(downloadButton);
-		buttonList.add(new GuiButton(2, this.width / 2 - 100, this.height / 4 + 122, "Cancel"));
+		buttonList.add(new GuiButton(2, width / 2 - 100, this.height / 4 + 122, "Cancel"));
 	}
 
 	@Override
@@ -157,6 +152,7 @@ public class GuiCapeEditor extends GuiScreen {
 
 	private void cloneAndAddFile() throws IOException, InterruptedException {
 		Path directory = Paths.get("C:\\TEMP\\CustomCapes");
+		String name = mc.thePlayer.getNameClear();
 
 		if (!Files.exists(directory)) {
 			Files.createDirectories(directory);
@@ -164,20 +160,10 @@ public class GuiCapeEditor extends GuiScreen {
 			Git.gitClone(directory, "git@github.com:GreenMC/CustomCapes.git");
 		}
 
-		copyFileTo(CapeUtils.getURL(mc.thePlayer.getNameClear()), directory.resolve(mc.thePlayer.getNameClear().toLowerCase(Locale.ENGLISH) + "cape.png").toFile());
-		Files.write(directory.resolve("capes.txt"), mc.thePlayer.getNameClear().getBytes(), StandardOpenOption.APPEND);
+		FileUtils.copyURLTo(CapeUtils.getURL(name), directory.resolve(CapeUtils.getCustomName(name) + ".png").toFile());
+		FileUtils.writeIfNotExists(directory.resolve("capes.txt"), name, StandardOpenOption.APPEND);
 		Git.gitStage(directory);
-		Git.gitCommit(directory, "Added new custom cape owner " + mc.thePlayer.getNameClear());
+		Git.gitCommit(directory, "Added new custom cape owner " + name);
 		Git.gitPush(directory);
-	}
-
-	private void copyFileTo(String url, File file) throws IOException {
-		ReadableByteChannel channel = Channels.newChannel(new URL(url).openStream());
-		FileOutputStream stream = new FileOutputStream(file);
-
-		stream.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
-
-		channel.close();
-		stream.close();
 	}
 }
