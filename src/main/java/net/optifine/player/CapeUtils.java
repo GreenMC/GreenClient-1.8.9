@@ -19,7 +19,9 @@ public class CapeUtils {
     private static final Pattern PATTERN_USERNAME = Pattern.compile("[a-zA-Z0-9_]+");
 
     public static void downloadCape(AbstractClientPlayer player) {
-        String playerName = player.getNameClear(), capeName = mc.customCapeName != null ? mc.customCapeName : playerName;
+        if (player == null) return;
+
+        String playerName = player.getNameClear(), capeName = mc.customCapeName, capeUrl = mc.customCapeUrl;
 
         ResourceLocation resourcelocation = new ResourceLocation("capeof/" + playerName);
         TextureManager texturemanager = Config.getTextureManager();
@@ -32,10 +34,20 @@ public class CapeUtils {
         }
 
         player.setLocationOfCape(null);
-        player.setElytraOfCape(false);
 
         if (playerName != null && !playerName.isEmpty() && !playerName.contains("\u0000") && PATTERN_USERNAME.matcher(playerName).matches()) {
-            String url = isCustomCape(playerName) ? "https://raw.githubusercontent.com/GreenMC/CustomCapes/master/" + getCustomName(playerName) + ".png" : "http://s.optifine.net/capes/" + capeName + ".png";
+            String url;
+
+            if (capeUrl != null) {
+                url = capeUrl;
+            } else if (capeName != null) {
+                url = "http://s.optifine.net/capes/" + capeName + ".png";
+            } else if (isCustomCape(playerName)) {
+                url = "https://raw.githubusercontent.com/GreenMC/CustomCapes/master/" + getCustomName(playerName) + ".png";
+            } else {
+                return;
+            }
+
             TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
             ITextureObject textureObject = textureManager.getTexture(resourcelocation);
 
@@ -45,14 +57,11 @@ public class CapeUtils {
                 if (imageData.imageFound != null) {
                     if (imageData.imageFound) {
                         player.setLocationOfCape(resourcelocation);
-
-                        if (imageData.getImageBuffer() instanceof CapeImageBuffer) {
-                            CapeImageBuffer capeImageBuffer = (CapeImageBuffer) imageData.getImageBuffer();
-                            player.setElytraOfCape(capeImageBuffer.isElytraOfCape());
-                        }
                     }
 
                     return;
+                } else {
+                    player.setLocationOfCape(null);
                 }
             }
 
@@ -79,10 +88,6 @@ public class CapeUtils {
         return bufferedimage;
     }
 
-    public static boolean isElytraCape(BufferedImage imageRaw, BufferedImage imageFixed) {
-        return imageRaw.getWidth() > imageFixed.getHeight();
-    }
-
     private static boolean isCustomCape(String name) {
         return name != null && (name.equals("mrdespi") || name.equals("mSquid_"));
     }
@@ -91,4 +96,5 @@ public class CapeUtils {
         if (isCustomCape(name)) return name.equals("mrdespi") ? "mrdespi_cape" : "msquid_cape";
         return null;
     }
+
 }

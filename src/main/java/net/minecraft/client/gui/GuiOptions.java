@@ -1,5 +1,6 @@
 package net.minecraft.client.gui;
 
+import io.github.greenmc.GuiCapeEditor;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundEventAccessorComposite;

@@ -27,7 +27,6 @@ public abstract class AbstractClientPlayer extends EntityPlayer {
     private NetworkPlayerInfo playerInfo;
     private ResourceLocation locationOfCape = null;
     private long reloadCapeTimeMs = 0L;
-    private boolean elytraOfCape = false;
     private String nameClear;
 
     public AbstractClientPlayer(World worldIn, GameProfile playerProfile)
@@ -100,7 +99,7 @@ public abstract class AbstractClientPlayer extends EntityPlayer {
         }
     }
 
-    public static ThreadDownloadImageData getDownloadImageSkin(ResourceLocation resourceLocationIn, String username)
+    public static void getDownloadImageSkin(ResourceLocation resourceLocationIn, String username)
     {
         TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
         ITextureObject itextureobject = texturemanager.getTexture(resourceLocationIn);
@@ -111,7 +110,6 @@ public abstract class AbstractClientPlayer extends EntityPlayer {
             texturemanager.loadTexture(resourceLocationIn, itextureobject);
         }
 
-        return (ThreadDownloadImageData)itextureobject;
     }
 
     public static ResourceLocation getLocationSkin(String username)
@@ -172,20 +170,6 @@ public abstract class AbstractClientPlayer extends EntityPlayer {
 
     public void setLocationOfCape(ResourceLocation capeLocation) {
         this.locationOfCape = capeLocation;
-    }
-
-    public boolean hasElytraCape() {
-        ResourceLocation resourcelocation = this.getLocationCape();
-
-        return resourcelocation != null && (resourcelocation != this.locationOfCape || this.elytraOfCape);
-    }
-
-    public void setElytraOfCape(boolean elytraCape) {
-        this.elytraOfCape = elytraCape;
-    }
-
-    public boolean isElytraOfCape() {
-        return this.elytraOfCape;
     }
 
     public long getReloadCapeTimeMs() {

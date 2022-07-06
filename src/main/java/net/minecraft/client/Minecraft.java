@@ -158,6 +158,7 @@ public class Minecraft implements IThreadListener {
     private final File fileAssets;
     private final String launchedVersion;
     public String customCapeName;
+    public String customCapeUrl;
     private final Proxy proxy;
     private ISaveFormat saveLoader;
     private static int debugFPS;

@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 
 public class CapeImageBuffer extends ImageBufferDownload {
 
-    private boolean elytraOfCape;
     private AbstractClientPlayer player;
     private final ResourceLocation resourceLocation;
 
@@ -18,16 +17,12 @@ public class CapeImageBuffer extends ImageBufferDownload {
     }
 
     public BufferedImage parseUserSkin(BufferedImage imageRaw) {
-        BufferedImage bufferedimage = CapeUtils.parseCape(imageRaw);
-        elytraOfCape = CapeUtils.isElytraCape(imageRaw, bufferedimage);
-
-        return bufferedimage;
+        return CapeUtils.parseCape(imageRaw);
     }
 
     public void skinAvailable() {
         if (player != null) {
             player.setLocationOfCape(resourceLocation);
-            player.setElytraOfCape(elytraOfCape);
         }
 
         cleanup();
@@ -37,7 +32,4 @@ public class CapeImageBuffer extends ImageBufferDownload {
         player = null;
     }
 
-    public boolean isElytraOfCape() {
-        return elytraOfCape;
-    }
 }

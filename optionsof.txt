@@ -70,3 +70,5 @@ ofFastMath:false
 ofFastRender:false
 ofTranslucentBlocks:0
 key_of.key.zoom:46
+key_Debug Cam:61
+key_Hide Menu:59
