@@ -32,6 +32,7 @@ import java.io.*;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
 
 public class GameSettings {
@@ -2232,7 +2233,7 @@ public class GameSettings {
                 return;
             }
 
-            BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(new FileInputStream(file1), StandardCharsets.UTF_8));
+            BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(Files.newInputStream(file1.toPath()), StandardCharsets.UTF_8));
             String line;
 
             while ((line = bufferedreader.readLine()) != null) {
@@ -2597,7 +2598,7 @@ public class GameSettings {
     {
         try
         {
-            PrintWriter printwriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(this.optionsFileOF), StandardCharsets.UTF_8));
+            PrintWriter printwriter = new PrintWriter(new OutputStreamWriter(Files.newOutputStream(this.optionsFileOF.toPath()), StandardCharsets.UTF_8));
             printwriter.println("ofFogType:" + this.ofFogType);
             printwriter.println("ofFogStart:" + this.ofFogStart);
             printwriter.println("ofMipmapType:" + this.ofMipmapType);
@@ -3075,7 +3076,7 @@ public class GameSettings {
             return MathHelper.clamp_float(value, this.valueMin, this.valueMax);
         }
 
-        protected float snapToStep(float value)
+        private float snapToStep(float value)
         {
             if (this.valueStep > 0.0F)
             {

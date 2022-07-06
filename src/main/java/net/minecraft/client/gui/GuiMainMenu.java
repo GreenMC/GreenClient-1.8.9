@@ -162,20 +162,23 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
-        if (calendar.get(2) + 1 == 12 && calendar.get(5) == 24)
-        {
+        int day = calendar.get(Calendar.DATE);
+        int month = calendar.get(Calendar.MONTH) + 1;
+
+        if (month == 12 && day == 24) {
             this.splashText = "Merry X-mas!";
-        }
-        else if (calendar.get(2) + 1 == 1 && calendar.get(5) == 1)
-        {
+        } else if (month == 1 && day == 1) {
             this.splashText = "Happy new year!";
-        }
-        else if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31)
-        {
+        } else if (month == 10 && day == 31) {
             this.splashText = "OOoooOOOoooo! Spooky!";
+        } else if (day == 13 && month == 7) {
+            this.splashText = "Happy birthday, mSquid_!";
+        } else if (day == 19 && month == 7) {
+            this.splashText = "Happy birthday, mrdespi!";
+        } else if (day == 1 && month == 7) {
+            this.splashText = "Rest in peace, Technoblade! We miss you! Best pig ever!";
         }
 
-        int i = 24;
         int j = this.height / 4 + 48;
 
         if (this.mc.isDemo())
@@ -187,17 +190,16 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
             this.addSingleplayerMultiplayerButtons(j, 24);
         }
 
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, j + 72 + 12, 98, 20, I18n.format("menu.options", new Object[0])));
-        this.buttonList.add(new GuiButton(4, this.width / 2 + 2, j + 72 + 12, 98, 20, I18n.format("menu.quit", new Object[0])));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, j + 72 + 12, 98, 20, I18n.format("menu.options")));
+        this.buttonList.add(new GuiButton(4, this.width / 2 + 2, j + 72 + 12, 98, 20, I18n.format("menu.quit")));
         this.buttonList.add(new GuiButtonLanguage(5, this.width / 2 - 124, j + 72 + 12));
 
-        synchronized (this.threadLock)
-        {
+        synchronized (this.threadLock) {
             this.field_92023_s = this.fontRendererObj.getStringWidth(this.openGLWarning1);
             this.field_92024_r = this.fontRendererObj.getStringWidth(this.openGLWarning2);
             int k = Math.max(this.field_92023_s, this.field_92024_r);
             this.field_92022_t = (this.width - k) / 2;
-            this.field_92021_u = ((GuiButton)this.buttonList.get(0)).yPosition - 24;
+            this.field_92021_u = this.buttonList.get(0).yPosition - 24;
             this.field_92020_v = this.field_92022_t + k;
             this.field_92019_w = this.field_92021_u + 24;
         }
@@ -211,8 +213,8 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 
     private void addSingleplayerMultiplayerButtons(int p_73969_1_, int p_73969_2_)
     {
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer", new Object[0])));
-        this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer", new Object[0])));
+        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer")));
+        this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer")));
 
         if (Reflector.GuiModList_Constructor.exists())
         {
@@ -299,8 +301,8 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
                 try
                 {
                     Class<?> oclass = Class.forName("java.awt.Desktop");
-                    Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object)null, new Object[0]);
-                    oclass.getMethod("browse", new Class[] {URI.class}).invoke(object, new Object[] {new URI(this.openGLWarningLink)});
+                    Object object = oclass.getMethod("getDesktop", new Class[0]).invoke(null);
+                    oclass.getMethod("browse", new Class[] {URI.class}).invoke(object, new URI(this.openGLWarningLink));
                 }
                 catch (Throwable throwable)
                 {
@@ -528,16 +530,16 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 
         if ((double)this.updateCounter < 1.0E-4D)
         {
-            this.drawTexturedModalRect(j + 0, k + 0, 0, 0, 99, 44);
-            this.drawTexturedModalRect(j + 99, k + 0, 129, 0, 27, 44);
-            this.drawTexturedModalRect(j + 99 + 26, k + 0, 126, 0, 3, 44);
-            this.drawTexturedModalRect(j + 99 + 26 + 3, k + 0, 99, 0, 26, 44);
-            this.drawTexturedModalRect(j + 155, k + 0, 0, 45, 155, 44);
+            this.drawTexturedModalRect(j, k, 0, 0, 99, 44);
+            this.drawTexturedModalRect(j + 99, k, 129, 0, 27, 44);
+            this.drawTexturedModalRect(j + 99 + 26, k, 126, 0, 3, 44);
+            this.drawTexturedModalRect(j + 99 + 26 + 3, k, 99, 0, 26, 44);
+            this.drawTexturedModalRect(j + 155, k, 0, 45, 155, 44);
         }
         else
         {
-            this.drawTexturedModalRect(j + 0, k + 0, 0, 0, 155, 44);
-            this.drawTexturedModalRect(j + 155, k + 0, 0, 45, 155, 44);
+            this.drawTexturedModalRect(j, k, 0, 0, 155, 44);
+            this.drawTexturedModalRect(j + 155, k, 0, 45, 155, 44);
         }
 
         GlStateManager.pushMatrix();
@@ -557,12 +559,12 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 
         if (Reflector.FMLCommonHandler_getBrandings.exists())
         {
-            Object object = Reflector.call(Reflector.FMLCommonHandler_instance, new Object[0]);
-            List<String> list = Lists.<String>reverse((List)Reflector.call(object, Reflector.FMLCommonHandler_getBrandings, new Object[] {Boolean.valueOf(true)}));
+            Object object = Reflector.call(Reflector.FMLCommonHandler_instance);
+            List<String> list = Lists.reverse((List)Reflector.call(object, Reflector.FMLCommonHandler_getBrandings, new Object[] {Boolean.valueOf(true)}));
 
             for (int l1 = 0; l1 < list.size(); ++l1)
             {
-                String s1 = (String)list.get(l1);
+                String s1 = list.get(l1);
 
                 if (!Strings.isNullOrEmpty(s1))
                 {
@@ -572,7 +574,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 
             if (Reflector.ForgeHooksClient_renderMainMenu.exists())
             {
-                Reflector.call(Reflector.ForgeHooksClient_renderMainMenu, new Object[] {this, this.fontRendererObj, Integer.valueOf(this.width), Integer.valueOf(this.height)});
+                Reflector.call(Reflector.ForgeHooksClient_renderMainMenu, this, this.fontRendererObj, this.width, this.height);
             }
         }
         else

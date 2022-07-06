@@ -3,7 +3,6 @@ package io.github.greenmc;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.util.ChatComponentText;
 import net.optifine.player.CapeUtils;
 
 import java.awt.*;

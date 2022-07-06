@@ -181,9 +181,8 @@ public class IntegratedServer extends MinecraftServer
         this.initialWorldChunkLoad();
     }
 
-    protected boolean startServer() throws IOException
-    {
-        logger.info("Starting integrated minecraft server version 1.9");
+    protected boolean startServer() {
+        logger.info("Starting integrated minecraft server version 1.8.9");
         this.setOnlineMode(true);
         this.setCanSpawnAnimals(true);
         this.setCanSpawnNPCs(true);
