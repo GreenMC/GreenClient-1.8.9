@@ -73,6 +73,10 @@ public abstract class AbstractClientPlayer extends EntityPlayer {
         return networkplayerinfo == null ? DefaultPlayerSkin.getDefaultSkin(this.getUniqueID()) : networkplayerinfo.getLocationSkin();
     }
 
+    public boolean hasCape() {
+        return getLocationCape() != null || getLocationOfCape() != null;
+    }
+
     public ResourceLocation getLocationCape()
     {
         if (!Config.isShowCapes())

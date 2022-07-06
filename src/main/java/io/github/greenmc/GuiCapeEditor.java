@@ -54,18 +54,20 @@ public class GuiCapeEditor extends GuiScreen {
 		capeUrlField.setFocused(false);
 
 		GuiButton downloadButton = new GuiButton(0, this.width / 2 - 100, this.height / 6 + 55, "Download Cape");
-		downloadButton.enabled = false;
+		downloadButton.enabled = mc.thePlayer != null;
+
+		GuiButton resetButton = new GuiButton(1, this.width / 2 - 100, this.height / 4 + 100, "Reset Cape");
+		resetButton.enabled = mc.thePlayer.hasCape();
 
 		buttonList.add(downloadButton);
-		buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 100, "Reset Cape"));
+		buttonList.add(resetButton);
 		buttonList.add(new GuiButton(2, this.width / 2 - 100, this.height / 4 + 122, "Cancel"));
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
-			String text = capeNameField.getText();
-			String url = capeUrlField.getText();
+			String text = capeNameField.getText(), url = capeUrlField.getText();
 
 			if (url != null && !url.isEmpty()) {
 				mc.customCapeName = null;
@@ -101,19 +103,23 @@ public class GuiCapeEditor extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawDefaultBackground();
-		drawCenteredString(this.fontRendererObj, "Cape Editor", this.width / 2, 15, 16777215);
-		drawCenteredString(this.fontRendererObj, "URL Cape, İsim Cape'den daha önceliklidir.", this.width / 2, this.height / 4 + 75, ChatEffects.rainbowEffect(1, 1).getRGB());
+		drawCenteredString(fontRendererObj, "Cape Editor", width / 2, 15, 16777215);
+		drawCenteredString(fontRendererObj, "URL Cape, İsim Cape'den daha önceliklidir.", width / 2, height / 4 + 75, ChatEffects.rainbowEffect(1, 1).getRGB());
 
 		capeNameField.drawTextBox();
+
 		if (capeNameField.getText().isEmpty()) {
-			drawString(this.fontRendererObj, "Optifine Cape Name", this.width / 2 - 96, this.height / 6 + 7, 16777215);
-		}
-		capeUrlField.drawTextBox();
-		if (capeUrlField.getText().isEmpty()) {
-			drawString(this.fontRendererObj, "Cape URL", this.width / 2 - 96, this.height / 6 + 32, 16777215);
+			drawString(fontRendererObj, "Optifine Cape Name", width / 2 - 96, height / 6 + 7, 16777215);
 		}
 
-		drawCenteredString(this.fontRendererObj, current, this.width / 2, this.height / 4 + 150, Color.decode("#03e3fc").getRGB());
+		capeUrlField.drawTextBox();
+
+		if (capeUrlField.getText().isEmpty()) {
+			drawString(fontRendererObj, "Cape URL", width / 2 - 96, height / 6 + 32, 16777215);
+		}
+
+		drawCenteredString(fontRendererObj, current, width / 2, height / 4 + 150, Color.decode("#03e3fc").getRGB());
+
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 

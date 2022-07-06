@@ -1,5 +1,6 @@
 package net.optifine.player;
 
+import com.google.common.io.Files;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
@@ -8,15 +9,47 @@ import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 import net.optifine.Config;
+import org.apache.commons.io.Charsets;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class CapeUtils {
 
-    private final static Minecraft mc = Minecraft.getMinecraft();
-    private static final Pattern PATTERN_USERNAME = Pattern.compile("[a-zA-Z0-9_]+");
+    private final static Minecraft mc;
+    private final static Pattern PATTERN_USERNAME;
+    private final static List<String> customCapeOwners;
+
+    static {
+        mc = Minecraft.getMinecraft();
+        PATTERN_USERNAME = Pattern.compile("[a-zA-Z0-9_]+");
+        customCapeOwners = new ArrayList<>();
+
+        try {
+            ReadableByteChannel channel = Channels.newChannel(new URL("https://raw.githubusercontent.com/GreenMC/CustomCapes/master/capes.txt").openStream());
+            FileOutputStream stream = new FileOutputStream("capes.txt");
+
+            stream.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
+
+            channel.close();
+            stream.close();
+
+            File temp = new File("capes.txt");
+
+            customCapeOwners.addAll(Files.readLines(temp, Charsets.UTF_8));
+
+            temp.delete();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
 
     public static void downloadCape(AbstractClientPlayer player) {
         if (player == null) return;
@@ -89,12 +122,14 @@ public class CapeUtils {
     }
 
     private static boolean isCustomCape(String name) {
-        return name != null && (name.equals("mrdespi") || name.equals("mSquid_"));
+        return customCapeOwners.contains(name);
     }
 
     private static String getCustomName(String name) {
-        if (isCustomCape(name)) return name.equals("mrdespi") ? "mrdespi_cape" : "msquid_cape";
+        if (isCustomCape(name)) {
+            name = name.toLowerCase(java.util.Locale.ENGLISH);
+            return name.endsWith("_") ? name + "cape" : name + "_cape";
+        }
         return null;
     }
-
 }
