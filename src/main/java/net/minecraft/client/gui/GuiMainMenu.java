@@ -2,6 +2,7 @@ package net.minecraft.client.gui;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.Runnables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -22,6 +23,7 @@ import net.optifine.reflect.Reflector;
 import org.apache.commons.io.Charsets;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.Project;
@@ -39,20 +41,20 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 {
     private static final Logger logger = LogManager.getLogger();
     private static final Random RANDOM = new Random();
-    private float updateCounter;
+    private final float updateCounter;
     private String splashText;
     private GuiButton buttonResetDemo;
     private int panoramaTimer;
     private DynamicTexture viewportTexture;
-    private boolean field_175375_v = true;
     private final Object threadLock = new Object();
     private String openGLWarning1;
     private String openGLWarning2;
     private String openGLWarningLink;
     private static final ResourceLocation splashTexts = new ResourceLocation("texts/splashes.txt");
     private static final ResourceLocation minecraftTitleTextures = new ResourceLocation("textures/gui/title/minecraft.png");
-    private static final ResourceLocation[] titlePanoramaPaths = new ResourceLocation[] {new ResourceLocation("textures/gui/title/background/panorama_0.png"), new ResourceLocation("textures/gui/title/background/panorama_1.png"), new ResourceLocation("textures/gui/title/background/panorama_2.png"), new ResourceLocation("textures/gui/title/background/panorama_3.png"), new ResourceLocation("textures/gui/title/background/panorama_4.png"), new ResourceLocation("textures/gui/title/background/panorama_5.png")};
+    private static final ResourceLocation[] titlePanoramaPaths = {new ResourceLocation("textures/gui/title/background/panorama_0.png"), new ResourceLocation("textures/gui/title/background/panorama_1.png"), new ResourceLocation("textures/gui/title/background/panorama_2.png"), new ResourceLocation("textures/gui/title/background/panorama_3.png"), new ResourceLocation("textures/gui/title/background/panorama_4.png"), new ResourceLocation("textures/gui/title/background/panorama_5.png")};
     public static final String field_96138_a = "Please click " + EnumChatFormatting.UNDERLINE + "here" + EnumChatFormatting.RESET + " for more information.";
+    private int widthCopyright, widthCopyrightRest;
     private int field_92024_r;
     private int field_92023_s;
     private int field_92022_t;
@@ -65,8 +67,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
     private GuiButton modButton;
     private GuiScreen modUpdateNotification;
 
-    public GuiMainMenu()
-    {
+    public GuiMainMenu() {
         this.openGLWarning2 = field_96138_a;
         this.field_183502_L = false;
         this.splashText = "missingno";
@@ -92,7 +93,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
             {
                 while (true)
                 {
-                    this.splashText = (String)list.get(RANDOM.nextInt(list.size()));
+                    this.splashText = list.get(RANDOM.nextInt(list.size()));
 
                     if (this.splashText.hashCode() != 125780783)
                     {
@@ -100,22 +101,14 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
                     }
                 }
             }
-        }
-        catch (IOException var12)
-        {
-            ;
-        }
-        finally
-        {
-            if (bufferedreader != null)
-            {
-                try
-                {
+        } catch (IOException ignored) {
+
+        } finally {
+            if (bufferedreader != null) {
+                try {
                     bufferedreader.close();
-                }
-                catch (IOException var11)
-                {
-                    ;
+                } catch (IOException ignored) {
+
                 }
             }
         }
@@ -123,10 +116,9 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         this.updateCounter = RANDOM.nextFloat();
         this.openGLWarning1 = "";
 
-        if (!GLContext.getCapabilities().OpenGL20 && !OpenGlHelper.areShadersSupported())
-        {
-            this.openGLWarning1 = I18n.format("title.oldgl1", new Object[0]);
-            this.openGLWarning2 = I18n.format("title.oldgl2", new Object[0]);
+        if (!GLContext.getCapabilities().OpenGL20 && !OpenGlHelper.areShadersSupported()) {
+            this.openGLWarning1 = I18n.format("title.oldgl1");
+            this.openGLWarning2 = I18n.format("title.oldgl2");
             this.openGLWarningLink = "https://help.mojang.com/customer/portal/articles/325948?ref=game";
         }
     }
@@ -136,34 +128,30 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         return this.field_183503_M != null;
     }
 
-    public void updateScreen()
-    {
-        ++this.panoramaTimer;
+    public void updateScreen() {
+        ++panoramaTimer;
 
-        if (this.func_183501_a())
-        {
-            this.field_183503_M.updateScreen();
+        if (func_183501_a()) {
+            field_183503_M.updateScreen();
         }
     }
 
-    public boolean doesGuiPauseGame()
-    {
+    public boolean doesGuiPauseGame() {
         return false;
     }
 
-    protected void keyTyped(char typedChar, int keyCode) throws IOException
-    {
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
     }
 
-    public void initGui()
-    {
+    public void initGui() {
+        this.widthCopyright = fontRendererObj.getStringWidth("Copyright Mojang AB. Do not distribute!");
+        this.widthCopyrightRest = this.width - this.widthCopyright - 2;
         this.viewportTexture = new DynamicTexture(256, 256);
         this.backgroundTexture = this.mc.getTextureManager().getDynamicTextureLocation("background", this.viewportTexture);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
-        int day = calendar.get(Calendar.DATE);
-        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DATE), month = calendar.get(Calendar.MONTH) + 1;
 
         if (month == 12 && day == 24) {
             this.splashText = "Merry X-mas!";
@@ -214,7 +202,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
     private void addSingleplayerMultiplayerButtons(int p_73969_1_, int p_73969_2_)
     {
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer")));
-        this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer")));
+        this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_, I18n.format("menu.multiplayer")));
 
         if (Reflector.GuiModList_Constructor.exists())
         {
@@ -224,7 +212,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 
     private void addDemoButtons(int p_73972_1_, int p_73972_2_)
     {
-        this.buttonList.add(new GuiButton(11, this.width / 2 - 100, p_73972_1_, I18n.format("menu.playdemo", new Object[0])));
+        this.buttonList.add(new GuiButton(11, this.width / 2 - 100, p_73972_1_, I18n.format("menu.playdemo")));
         this.buttonList.add(this.buttonResetDemo = new GuiButton(12, this.width / 2 - 100, p_73972_1_ + p_73972_2_ * 1, I18n.format("menu.resetdemo", new Object[0])));
         ISaveFormat isaveformat = this.mc.getSaveLoader();
         WorldInfo worldinfo = isaveformat.getWorldInfo("Demo_World");
@@ -235,82 +223,64 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         }
     }
 
-    protected void actionPerformed(GuiButton button) throws IOException
-    {
-        if (button.id == 0)
-        {
-            this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
+    protected void actionPerformed(GuiButton button) throws IOException{
+        if (button.id == 0) {
+            mc.displayGuiScreen(new GuiOptions(this, mc.gameSettings));
         }
 
-        if (button.id == 5)
-        {
-            this.mc.displayGuiScreen(new GuiLanguage(this, this.mc.gameSettings, this.mc.getLanguageManager()));
+        if (button.id == 5) {
+            mc.displayGuiScreen(new GuiLanguage(this, mc.gameSettings, mc.getLanguageManager()));
         }
 
-        if (button.id == 1)
-        {
-            this.mc.displayGuiScreen(new GuiSelectWorld(this));
+        if (button.id == 1) {
+            mc.displayGuiScreen(new GuiSelectWorld(this));
         }
 
-        if (button.id == 2)
-        {
+        if (button.id == 2) {
             this.mc.displayGuiScreen(new GuiMultiplayer(this));
         }
 
-        if (button.id == 4)
-        {
-            this.mc.shutdown();
+        if (button.id == 4) {
+            mc.shutdown();
         }
 
-        if (button.id == 6 && Reflector.GuiModList_Constructor.exists())
-        {
-            this.mc.displayGuiScreen((GuiScreen)Reflector.newInstance(Reflector.GuiModList_Constructor, new Object[] {this}));
+        if (button.id == 6 && Reflector.GuiModList_Constructor.exists()) {
+            mc.displayGuiScreen((GuiScreen)Reflector.newInstance(Reflector.GuiModList_Constructor, new Object[] {this}));
         }
 
-        if (button.id == 11)
-        {
-            this.mc.launchIntegratedServer("Demo_World", "Demo_World", DemoWorldServer.demoWorldSettings);
+        if (button.id == 11) {
+            mc.launchIntegratedServer("Demo_World", "Demo_World", DemoWorldServer.demoWorldSettings);
         }
 
-        if (button.id == 12)
-        {
+        if (button.id == 12) {
             ISaveFormat isaveformat = this.mc.getSaveLoader();
             WorldInfo worldinfo = isaveformat.getWorldInfo("Demo_World");
 
-            if (worldinfo != null)
-            {
+            if (worldinfo != null) {
                 GuiYesNo guiyesno = GuiSelectWorld.makeDeleteWorldYesNo(this, worldinfo.getWorldName(), 12);
                 this.mc.displayGuiScreen(guiyesno);
             }
         }
     }
 
-    public void confirmClicked(boolean result, int id)
-    {
-        if (result && id == 12)
-        {
-            ISaveFormat isaveformat = this.mc.getSaveLoader();
+    public void confirmClicked(boolean result, int id) {
+        if (result && id == 12) {
+            ISaveFormat isaveformat = mc.getSaveLoader();
             isaveformat.flushCache();
             isaveformat.deleteWorldDirectory("Demo_World");
-            this.mc.displayGuiScreen(this);
-        }
-        else if (id == 13)
-        {
-            if (result)
-            {
-                try
-                {
+            mc.displayGuiScreen(this);
+        } else if (id == 13) {
+            if (result) {
+                try {
                     Class<?> oclass = Class.forName("java.awt.Desktop");
                     Object object = oclass.getMethod("getDesktop", new Class[0]).invoke(null);
                     oclass.getMethod("browse", new Class[] {URI.class}).invoke(object, new URI(this.openGLWarningLink));
-                }
-                catch (Throwable throwable)
-                {
-                    logger.error("Couldn\'t open link", throwable);
+                } catch (Throwable throwable) {
+                    logger.error("Couldn't open link", throwable);
                 }
             }
 
-            this.mc.displayGuiScreen(this);
+            mc.displayGuiScreen(this);
         }
     }
 
@@ -560,7 +530,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         if (Reflector.FMLCommonHandler_getBrandings.exists())
         {
             Object object = Reflector.call(Reflector.FMLCommonHandler_instance);
-            List<String> list = Lists.reverse((List)Reflector.call(object, Reflector.FMLCommonHandler_getBrandings, new Object[] {Boolean.valueOf(true)}));
+            List<String> list = Lists.reverse((List)Reflector.call(object, Reflector.FMLCommonHandler_getBrandings, true));
 
             for (int l1 = 0; l1 < list.size(); ++l1)
             {
@@ -582,8 +552,12 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
             this.drawString(this.fontRendererObj, s, 2, this.height - 10, -1);
         }
 
-        String s2 = "Copyright Mojang AB. Do not distribute!";
-        this.drawString(this.fontRendererObj, s2, this.width - this.fontRendererObj.getStringWidth(s2) - 2, this.height - 10, -1);
+        String copyrightString = "Copyright Mojang AB. Do not distribute!";
+        drawString(this.fontRendererObj, copyrightString, this.widthCopyrightRest, this.height - 10, -1);
+
+        if (mouseX > (double) widthCopyrightRest && mouseX < (double) (widthCopyrightRest + widthCopyright) && mouseY > (double) (height - 10) && mouseY < (double) height) {
+            drawRect(this.widthCopyrightRest, this.height - 1, this.widthCopyrightRest + this.widthCopyright, this.height, 16777215 | l);
+        }
 
         if (this.openGLWarning1 != null && this.openGLWarning1.length() > 0)
         {
@@ -617,6 +591,10 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
                 guiconfirmopenlink.disableSecurityWarning();
                 this.mc.displayGuiScreen(guiconfirmopenlink);
             }
+        }
+
+        if (mouseX > (double) widthCopyrightRest && mouseX < (double) (widthCopyrightRest + widthCopyright) && mouseY > (double) (height - 10) && mouseY < (double) height) {
+            mc.displayGuiScreen(new GuiWinGame(false));
         }
 
         if (this.func_183501_a())

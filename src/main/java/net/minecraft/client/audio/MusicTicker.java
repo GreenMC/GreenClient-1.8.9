@@ -40,28 +40,25 @@ public class MusicTicker implements ITickable
 
         if (this.currentMusic == null && this.timeUntilNextMusic-- <= 0)
         {
-            this.func_181558_a(musicticker$musictype);
+            this.playMusic(musicticker$musictype);
         }
     }
 
-    public void func_181558_a(MusicTicker.MusicType p_181558_1_)
-    {
-        this.currentMusic = PositionedSoundRecord.create(p_181558_1_.getMusicLocation());
+    public void playMusic(MusicTicker.MusicType musicType) {
+        this.currentMusic = PositionedSoundRecord.create(musicType.getMusicLocation());
         this.mc.getSoundHandler().playSound(this.currentMusic);
         this.timeUntilNextMusic = Integer.MAX_VALUE;
     }
 
-    public void func_181557_a()
-    {
-        if (this.currentMusic != null)
-        {
+    public void stopCurrentMusic() {
+        if (this.currentMusic != null) {
             this.mc.getSoundHandler().stopSound(this.currentMusic);
             this.currentMusic = null;
             this.timeUntilNextMusic = 0;
         }
     }
 
-    public static enum MusicType
+    public enum MusicType
     {
         MENU(new ResourceLocation("minecraft:music.menu"), 20, 600),
         GAME(new ResourceLocation("minecraft:music.game"), 12000, 24000),

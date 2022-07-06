@@ -58,6 +58,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
     private int touchValue;
     private URI clickedLinkURI;
 
+
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         buttonList.forEach(guiButton -> guiButton.drawButton(mc, mouseX, mouseY));
         labelList.forEach(guiLabel -> guiLabel.drawLabel(mc, mouseX, mouseY));
