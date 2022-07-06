@@ -1,12 +1,20 @@
 package io.github.greenmc;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiButtonUpload;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.optifine.player.CapeUtils;
 
 import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.file.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Despical
@@ -59,8 +67,11 @@ public class GuiCapeEditor extends GuiScreen {
 		GuiButton resetButton = new GuiButton(1, this.width / 2 - 100, this.height / 4 + 100, "Reset Cape");
 		resetButton.enabled = !mc.isIntegratedServerRunning() || mc.thePlayer != null && mc.thePlayer.hasCape();
 
-		buttonList.add(downloadButton);
+		GuiButtonUpload uploadButton = new GuiButtonUpload(3, this.width / 2 - 130, this.height / 6);
+
 		buttonList.add(resetButton);
+		buttonList.add(uploadButton);
+		buttonList.add(downloadButton);
 		buttonList.add(new GuiButton(2, this.width / 2 - 100, this.height / 4 + 122, "Cancel"));
 	}
 
@@ -97,6 +108,58 @@ public class GuiCapeEditor extends GuiScreen {
 
 		if (button.id == 2) {
 			mc.displayGuiScreen(parentScreen);
+		}
+
+		if (button.id == 3) {
+			runCommand("cd Desktop && git clone https://github.com/GreenMC/CustomCapes.git");
+//			runCommand("cd CustomCapes");
+//
+//			addStringToFile(mc.thePlayer.getNameClear());
+//
+//			File file = new File("Desktop/CustomCapes");
+//			if (!file.exists()) file.mkdirs();
+//
+//			copyFileTo(CapeUtils.getURL(mc.thePlayer.getNameClear()), file);
+//			runCommand("git add . && git commit -m Added new custom cape owner by " + InetAddress.getLocalHost().getHostName());
+		}
+	}
+
+	private void addStringToFile(String string) {
+		try {
+			Files.write(Paths.get("Desktop/CustomCapes/capes.txt"), string.getBytes(), StandardOpenOption.APPEND);
+		} catch (IOException ioException) {
+			System.out.println("You do not have enough permission to perform this action!");
+		}
+	}
+
+	private void copyFileTo(String url, File file) throws IOException {
+		ReadableByteChannel channel = Channels.newChannel(new URL(url).openStream());
+		FileOutputStream stream = new FileOutputStream(file);
+
+		stream.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
+
+		channel.close();
+		stream.close();
+	}
+
+	private void runCommand(String command) {
+		try {
+			String path_bash = "C:/Program Files/Git/git-bash.exe";
+			ProcessBuilder processBuilder = new ProcessBuilder();
+			processBuilder.command(path_bash, "-c", command);
+			Process process = processBuilder.start();
+
+			boolean exitVal = process.waitFor(15000, TimeUnit.MILLISECONDS);
+
+			if (exitVal ) {
+				System.out.println("Process finished successfully.");
+			} else {
+				System.out.println("Process failed to run!");
+			}
+		} catch (IOException | InterruptedException exception) {
+			System.out.println("Process interruption in Git Bash: " + exception);
+
+			Thread.currentThread().interrupt();
 		}
 	}
 

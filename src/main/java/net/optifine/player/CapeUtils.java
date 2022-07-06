@@ -107,6 +107,22 @@ public class CapeUtils {
         }
     }
 
+    public static String getURL(String str) {
+        String url, capeUrl = mc.customCapeUrl, capeName = mc.customCapeName;
+
+        if (capeUrl != null) {
+            url = capeUrl;
+        } else if (capeName != null) {
+            url = "http://s.optifine.net/capes/" + capeName + ".png";
+        } else if (isCustomCape(str)) {
+            url = "https://raw.githubusercontent.com/GreenMC/CustomCapes/master/" + getCustomName(str) + ".png";
+        } else {
+            return null;
+        }
+
+        return url;
+    }
+
     public static BufferedImage parseCape(BufferedImage img) {
         int i = 64, j = 32, k = img.getWidth();
 
