@@ -2,7 +2,6 @@ package io.github.greenmc;
 
 import io.github.greenmc.util.FileUtils;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiButtonUpload;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.optifine.player.CapeUtils;
@@ -23,7 +22,7 @@ public class GuiCapeEditor extends GuiScreen {
 
 	private final GuiScreen parentScreen;
 
-	private String current = "";
+	public String current = "";
 
 	public GuiCapeEditor(GuiScreen parentScreen) {
 		this.parentScreen = parentScreen;
@@ -107,11 +106,7 @@ public class GuiCapeEditor extends GuiScreen {
 		}
 
 		if (button.id == 3) {
-			try {
-				cloneAndAddFile();
-			} catch (Exception exception) {
-				System.out.println("Exception during the Git process!");
-			}
+			cloneAndAddFile();
 		}
 	}
 
@@ -150,20 +145,49 @@ public class GuiCapeEditor extends GuiScreen {
 		capeUrlField.updateCursorCounter();
 	}
 
-	private void cloneAndAddFile() throws IOException, InterruptedException {
-		Path directory = Paths.get("C:\\TEMP\\CustomCapes");
-		String name = mc.thePlayer.getNameClear();
+	private void cloneAndAddFile() {
+		CapeUploader uploadThread = new CapeUploader(this);
+		uploadThread.start();
+	}
 
-		if (!Files.exists(directory)) {
-			Files.createDirectories(directory);
+	private static final class CapeUploader extends Thread {
 
-			Git.gitClone(directory, "git@github.com:GreenMC/CustomCapes.git");
+		private final GuiCapeEditor editor;
+
+		private CapeUploader(GuiCapeEditor editor) {
+			super("Cape Upload Thread");
+			this.editor = editor;
 		}
 
-		FileUtils.copyURLTo(CapeUtils.getURL(name), directory.resolve(CapeUtils.getCustomName(name) + ".png").toFile());
-		FileUtils.writeIfNotExists(directory.resolve("capes.txt"), name, StandardOpenOption.APPEND);
-		Git.gitStage(directory);
-		Git.gitCommit(directory, "Added new custom cape owner " + name);
-		Git.gitPush(directory);
+		public void run() {
+			try {
+				Path directory = Paths.get("C:\\TEMP\\CustomCapes");
+				String name = editor.mc.thePlayer.getNameClear();
+
+				if (!Files.exists(directory)) {
+					Files.createDirectories(directory);
+
+					editor.current = "Repo klonlanıyor...";
+					Git.gitClone(directory, "https://github.com/GreenMC/CustomCapes.git");
+				}
+
+				editor.current = "URL'deki veriler dosyaya yazılıyor...";
+				FileUtils.copyURLTo(CapeUtils.getURL(name), directory.resolve(CapeUtils.getCustomName(name) + ".png").toFile());
+				editor.current = "Cape sahiplerine ismin ekleniyor...";
+				FileUtils.writeIfNotExists(directory.resolve("capes.txt"), name, StandardOpenOption.APPEND);
+				editor.current = "Veriler git'e ekleniyor...";
+				Git.gitStage(directory);
+				editor.current = "Commit atılıyor...";
+				Git.gitCommit(directory, "Added new custom cape owner " + name);
+				editor.current = "Dosya pushlanıyor...";
+				Git.gitPush(directory);
+				editor.current = "Cape uploadlandı.";
+			} catch (IOException | InterruptedException exception) {
+				editor.current = "Upload sırasında bir hata oluştu. Loglara göz atın.";
+				System.out.println("Exception during the Git process!");
+				exception.printStackTrace();
+			}
+		}
+
 	}
 }
