@@ -121,6 +121,9 @@ public class GuiCapeEditor extends GuiScreen {
 			buttonList.get(2).enabled = false;
 
 			current = "Dosyalar başarıyla silindi";
+
+			mc.customCapeUrl = null;
+			mc.customCapeName = null;
 		}
 	}
 

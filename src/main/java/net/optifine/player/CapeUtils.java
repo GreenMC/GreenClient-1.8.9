@@ -47,13 +47,13 @@ public class CapeUtils {
 
         String playerName = player.getNameClear();
         ResourceLocation resourcelocation = new ResourceLocation("capeof/" + playerName);
-        TextureManager texturemanager = Config.getTextureManager();
-        ITextureObject itextureobject = texturemanager.getTexture(resourcelocation);
+        TextureManager textureManager = Config.getTextureManager();
+        ITextureObject itextureobject = textureManager.getTexture(resourcelocation);
 
         if (itextureobject instanceof SimpleTexture) {
             SimpleTexture simpletexture = (SimpleTexture)itextureobject;
             simpletexture.deleteGlTexture();
-            texturemanager.deleteTexture(resourcelocation);
+            textureManager.deleteTexture(resourcelocation);
         }
 
         player.setLocationOfCape(null);
@@ -63,7 +63,6 @@ public class CapeUtils {
 
             if (url == null) return;
 
-            TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
             ITextureObject textureObject = textureManager.getTexture(resourcelocation);
 
             if (textureObject instanceof ThreadDownloadImageData) {
