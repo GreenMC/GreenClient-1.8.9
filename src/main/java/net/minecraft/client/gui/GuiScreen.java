@@ -381,16 +381,18 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
         this.mc.thePlayer.sendChatMessage(msg);
     }
 
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
-    {
-        if (mouseButton == 0)
-        {
-            for (GuiButton guibutton : this.buttonList) {
-                if (guibutton.mousePressed(this.mc, mouseX, mouseY)) {
-                    this.selectedButton = guibutton;
-                    guibutton.playPressSound(this.mc.getSoundHandler());
-                    this.actionPerformed(guibutton);
-                }
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        if (mouseButton != 0) {
+            return;
+        }
+
+        for (int i = 0; i < this.buttonList.size(); ++i) {
+            GuiButton guibutton = this.buttonList.get(i);
+
+            if (guibutton.mousePressed(this.mc, mouseX, mouseY)) {
+                this.selectedButton = guibutton;
+                guibutton.playPressSound(this.mc.getSoundHandler());
+                this.actionPerformed(guibutton);
             }
         }
     }
