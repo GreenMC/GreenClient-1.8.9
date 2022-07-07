@@ -1009,9 +1009,8 @@ public class Minecraft implements IThreadListener {
         }
     }
 
-    public int getLimitFramerate()
-    {
-        return this.theWorld == null && this.currentScreen != null ? 30 : this.gameSettings.limitFramerate;
+    public int getLimitFramerate() {
+        return (this.theWorld == null && this.currentScreen != null) || (!Display.isActive() && !inGameHasFocus) ? 60 : this.gameSettings.limitFramerate;
     }
 
     public boolean isFramerateLimitBelowMax()
@@ -1184,17 +1183,13 @@ public class Minecraft implements IThreadListener {
         }
     }
 
-    public void shutdown()
-    {
+    public void shutdown() {
         this.running = false;
     }
 
-    public void setIngameFocus()
-    {
-        if (Display.isActive())
-        {
-            if (!this.inGameHasFocus)
-            {
+    public void setIngameFocus() {
+        if (Display.isActive()) {
+            if (!this.inGameHasFocus) {
                 this.inGameHasFocus = true;
                 this.mouseHelper.grabMouseCursor();
                 this.displayGuiScreen(null);
@@ -1203,10 +1198,8 @@ public class Minecraft implements IThreadListener {
         }
     }
 
-    public void setIngameNotInFocus()
-    {
-        if (this.inGameHasFocus)
-        {
+    public void setIngameNotInFocus() {
+        if (this.inGameHasFocus) {
             KeyBinding.unPressAllKeys();
             this.inGameHasFocus = false;
             this.mouseHelper.ungrabMouseCursor();

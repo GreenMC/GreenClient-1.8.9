@@ -84,7 +84,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
     private static final ResourceLocation locationSnowPng = new ResourceLocation("textures/environment/snow.png");
     public static boolean anaglyphEnable;
     public static int anaglyphField;
-    private Minecraft mc;
+    private final Minecraft mc;
     private final IResourceManager resourceManager;
     private final Random random = new Random();
     private float farPlaneDistance;

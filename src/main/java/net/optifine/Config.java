@@ -49,7 +49,6 @@ import java.util.regex.Pattern;
 public class Config
 {
     public static final String VERSION = "OptiFine_1.8.9_HD_U_M6_pre2";
-    private static String build = null;
     private static String newRelease = null;
     private static boolean notify64BitJava = false;
     public static String openGlVersion = null;
@@ -149,7 +148,7 @@ public class Config
     {
         log("");
         log(getVersion());
-        log("Build: " + getBuild());
+        log("Build: GreenMC");
         log("OS: " + System.getProperty("os.name") + " (" + System.getProperty("os.arch") + ") version " + System.getProperty("os.version"));
         log("Java: " + System.getProperty("java.version") + ", " + System.getProperty("java.vendor"));
         log("VM: " + System.getProperty("java.vm.name") + " (" + System.getProperty("java.vm.info") + "), " + System.getProperty("java.vm.vendor"));
@@ -183,29 +182,8 @@ public class Config
         dbg("Maximum texture size: " + i + "x" + i);
     }
 
-    public static String getBuild()
-    {
-        if (build == null)
-        {
-            try
-            {
-                InputStream inputstream = Config.class.getResourceAsStream("/buildof.txt");
-
-                if (inputstream == null)
-                {
-                    return null;
-                }
-
-                build = readLines(inputstream)[0];
-            }
-            catch (Exception exception)
-            {
-                warn("" + exception.getClass().getName() + ": " + exception.getMessage());
-                build = "";
-            }
-        }
-
-        return build;
+    public static String getBuild() {
+        return "GreenMC";
     }
 
     public static boolean isFancyFogAvailable()
@@ -1535,12 +1513,6 @@ public class Config
 
             list.add(s);
         }
-    }
-
-    public static String readFile(File p_readFile_0_) throws IOException
-    {
-        FileInputStream fileinputstream = new FileInputStream(p_readFile_0_);
-        return readInputStream(fileinputstream, "ASCII");
     }
 
     public static String readInputStream(InputStream p_readInputStream_0_) throws IOException
