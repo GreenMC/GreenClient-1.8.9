@@ -1,5 +1,7 @@
-package io.github.greenmc;
+package io.github.greenmc.gui;
 
+import io.github.greenmc.ChatEffects;
+import io.github.greenmc.Git;
 import io.github.greenmc.util.FileUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -61,13 +63,17 @@ public class GuiCapeEditor extends GuiScreen {
 		GuiButton resetButton = new GuiButton(1, width / 2 - 100, height / 4 + 100, "Reset Cape");
 		resetButton.enabled = !mc.isIntegratedServerRunning() || mc.thePlayer != null && mc.thePlayer.hasCape();
 
-		GuiButtonUpload uploadButton = new GuiButtonUpload(3, this.width / 2 - 130, height / 6);
+		GuiButtonUpload uploadButton = new GuiButtonUpload(3, width / 2 - 130, height / 6);
 		uploadButton.enabled = mc.thePlayer != null && mc.thePlayer.hasCape();
+
+		GuiButton deleteButton = new GuiButtonDelete(4, width / 2 - 130, height / 6 + 25);
+		deleteButton.enabled = Files.exists(Paths.get("C:\\TEMP\\CustomCapes"));
 
 		buttonList.add(resetButton);
 		buttonList.add(uploadButton);
+		buttonList.add(deleteButton);
 		buttonList.add(downloadButton);
-		buttonList.add(new GuiButton(2, width / 2 - 100, this.height / 4 + 122, "Cancel"));
+		buttonList.add(new GuiButton(2, width / 2 - 100, height / 4 + 122, "Cancel"));
 	}
 
 	@Override
@@ -106,7 +112,15 @@ public class GuiCapeEditor extends GuiScreen {
 		}
 
 		if (button.id == 3) {
-			cloneAndAddFile();
+			CapeUploader uploadThread = new CapeUploader(this);
+			uploadThread.start();
+		}
+
+		if (button.id == 4) {
+			FileUtils.deleteDirWithFiles(Paths.get("C:\\TEMP"));
+			buttonList.get(2).enabled = false;
+
+			current = "Dosyalar başarıyla silindi";
 		}
 	}
 
@@ -145,12 +159,7 @@ public class GuiCapeEditor extends GuiScreen {
 		capeUrlField.updateCursorCounter();
 	}
 
-	private void cloneAndAddFile() {
-		CapeUploader uploadThread = new CapeUploader(this);
-		uploadThread.start();
-	}
-
-	private static final class CapeUploader extends Thread {
+	private final class CapeUploader extends Thread {
 
 		private final GuiCapeEditor editor;
 
@@ -182,8 +191,12 @@ public class GuiCapeEditor extends GuiScreen {
 				editor.current = "Dosya pushlanıyor...";
 				Git.gitPush(directory);
 				editor.current = "Cape uploadlandı.";
+
+				buttonList.get(2).enabled = true;
 			} catch (IOException | InterruptedException exception) {
 				editor.current = "Upload sırasında bir hata oluştu. Loglara göz atın.";
+				buttonList.get(2).enabled = false;
+
 				System.out.println("Exception during the Git process!");
 				exception.printStackTrace();
 			}

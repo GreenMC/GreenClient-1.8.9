@@ -11,6 +11,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Comparator;
 
 /**
  * @author Despical
@@ -33,5 +34,12 @@ public class FileUtils {
 		if (!Files.readLines(path.toFile(), Charsets.UTF_8).contains(string)) {
 			java.nio.file.Files.write(path, (string + System.lineSeparator()).getBytes(), options);
 		}
+	}
+
+	public static void deleteDirWithFiles(Path path) throws IOException {
+		java.nio.file.Files.walk(path)
+				.sorted(Comparator.reverseOrder())
+				.map(Path::toFile)
+				.forEach(File::delete);
 	}
 }

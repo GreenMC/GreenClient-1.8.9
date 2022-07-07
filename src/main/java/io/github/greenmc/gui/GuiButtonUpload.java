@@ -1,4 +1,4 @@
-package io.github.greenmc;
+package io.github.greenmc.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
