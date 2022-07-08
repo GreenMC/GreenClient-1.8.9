@@ -119,9 +119,6 @@ public class GuiCapeEditor extends GuiScreen {
 			buttonList.get(2).enabled = false;
 
 			current = "Dosyalar başarıyla silindi.";
-
-			mc.customCapeUrl = null;
-			mc.customCapeName = null;
 		}
 	}
 
@@ -178,7 +175,7 @@ public class GuiCapeEditor extends GuiScreen {
 					Files.createDirectories(directory);
 
 					editor.current = "Repo klonlanıyor...";
-					Git.gitClone(directory, "https://github.com/GreenMC/CustomCapes.git");
+					Git.gitClone(directory, "git@github.com:GreenMC/CustomCapes.git");
 				}
 
 				editor.current = "URL'deki veriler dosyaya yazılıyor...";
@@ -194,6 +191,9 @@ public class GuiCapeEditor extends GuiScreen {
 				editor.current = "Cape uploadlandı.";
 
 				buttonList.get(2).enabled = true;
+
+				mc.customCapeName = null;
+				mc.customCapeUrl = null;
 			} catch (IOException | InterruptedException exception) {
 				editor.current = "Upload sırasında bir hata oluştu. Loglara göz atın.";
 				buttonList.get(2).enabled = false;
@@ -202,6 +202,5 @@ public class GuiCapeEditor extends GuiScreen {
 				exception.printStackTrace();
 			}
 		}
-
 	}
 }
