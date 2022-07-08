@@ -120,7 +120,7 @@ public class GuiCapeEditor extends GuiScreen {
 			FileUtils.deleteDirWithFiles(Paths.get("C:\\TEMP"));
 			buttonList.get(2).enabled = false;
 
-			current = "Dosyalar başarıyla silindi";
+			current = "Dosyalar başarıyla silindi.";
 
 			mc.customCapeUrl = null;
 			mc.customCapeName = null;

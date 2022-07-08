@@ -12,10 +12,10 @@ import java.util.List;
 
 public class GuiMessage extends GuiScreen
 {
-    private GuiScreen parentScreen;
-    private String messageLine1;
-    private String messageLine2;
-    private final List listLines2 = Lists.newArrayList();
+    private final GuiScreen parentScreen;
+    private final String messageLine1;
+    private final String messageLine2;
+    private final List<String> listLines2 = Lists.newArrayList();
     protected String confirmButtonText;
     private int ticksUntilEnable;
 
@@ -24,7 +24,7 @@ public class GuiMessage extends GuiScreen
         this.parentScreen = parentScreen;
         this.messageLine1 = line1;
         this.messageLine2 = line2;
-        this.confirmButtonText = I18n.format("gui.done", new Object[0]);
+        this.confirmButtonText = I18n.format("gui.done");
     }
 
     public void initGui()
@@ -45,9 +45,9 @@ public class GuiMessage extends GuiScreen
         this.drawCenteredString(this.fontRendererObj, this.messageLine1, this.width / 2, 70, 16777215);
         int i = 90;
 
-        for (Object s : this.listLines2)
+        for (String s : this.listLines2)
         {
-            this.drawCenteredString(this.fontRendererObj, (String) s, this.width / 2, i, 16777215);
+            this.drawCenteredString(this.fontRendererObj, s, this.width / 2, i, 16777215);
             i += this.fontRendererObj.FONT_HEIGHT;
         }
 

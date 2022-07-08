@@ -3,18 +3,7 @@ package net.optifine.render;
 import net.minecraft.client.renderer.GlStateManager;
 import net.optifine.Config;
 
-public class Blender
-{
-    public static final int BLEND_ALPHA = 0;
-    public static final int BLEND_ADD = 1;
-    public static final int BLEND_SUBSTRACT = 2;
-    public static final int BLEND_MULTIPLY = 3;
-    public static final int BLEND_DODGE = 4;
-    public static final int BLEND_BURN = 5;
-    public static final int BLEND_SCREEN = 6;
-    public static final int BLEND_OVERLAY = 7;
-    public static final int BLEND_REPLACE = 8;
-    public static final int BLEND_DEFAULT = 1;
+public class Blender {
 
     public static int parseBlend(String str)
     {
