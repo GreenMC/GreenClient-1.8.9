@@ -89,7 +89,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
     public void transformHeldFull3DItemLayer() {}
 
     public void doRender(T entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        if (!Reflector.RenderLivingEvent_Pre_Constructor.exists() || !Reflector.postForgeBusEvent(Reflector.RenderLivingEvent_Pre_Constructor, new Object[] {entity, this, Double.valueOf(x), Double.valueOf(y), Double.valueOf(z)}))
+        if (!Reflector.RenderLivingEvent_Pre_Constructor.exists() || !Reflector.postForgeBusEvent(Reflector.RenderLivingEvent_Pre_Constructor, entity, this, x, y, z))
         {
             if (animateModelLiving)
             {
@@ -103,7 +103,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
             if (Reflector.ForgeEntity_shouldRiderSit.exists()) {
                 this.mainModel.isRiding = entity.isRiding() && entity.ridingEntity != null
-                        && Reflector.callBoolean(entity.ridingEntity, Reflector.ForgeEntity_shouldRiderSit, new Object[0]);
+                        && Reflector.callBoolean(entity.ridingEntity, Reflector.ForgeEntity_shouldRiderSit);
             }
 
             this.mainModel.isChild = entity.isChild();
@@ -261,7 +261,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
             if (Reflector.RenderLivingEvent_Post_Constructor.exists())
             {
-                Reflector.postForgeBusEvent(Reflector.RenderLivingEvent_Post_Constructor, new Object[] {entity, this, Double.valueOf(x), Double.valueOf(y), Double.valueOf(z)});
+                Reflector.postForgeBusEvent(Reflector.RenderLivingEvent_Post_Constructor, entity, this, x, y, z);
             }
         }
     }

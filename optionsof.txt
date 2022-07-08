@@ -1,8 +1,8 @@
 ofFogType:1
-ofFogStart:0.8
+ofFogStart:0.4
 ofMipmapType:0
 ofOcclusionFancy:false
-ofSmoothFps:false
+ofSmoothFps:true
 ofSmoothWorld:true
 ofAoLevel:1.0
 ofClouds:0
@@ -38,7 +38,7 @@ ofStars:true
 ofSunMoon:true
 ofVignette:0
 ofChunkUpdates:1
-ofChunkUpdatesDynamic:false
+ofChunkUpdatesDynamic:true
 ofTime:0
 ofClearWater:false
 ofAaLevel:0
@@ -48,16 +48,16 @@ ofBetterSnow:false
 ofSwampColors:true
 ofRandomEntities:true
 ofSmoothBiomes:true
-ofCustomFonts:true
-ofCustomColors:true
+ofCustomFonts:false
+ofCustomColors:false
 ofCustomItems:true
 ofCustomSky:true
 ofShowCapes:true
 ofNaturalTextures:false
 ofEmissiveTextures:true
 ofLazyChunkLoading:true
-ofRenderRegions:false
-ofSmartAnimations:false
+ofRenderRegions:true
+ofSmartAnimations:true
 ofDynamicFov:true
 ofAlternateBlocks:true
 ofDynamicLights:3
@@ -66,8 +66,8 @@ ofCustomEntityModels:true
 ofCustomGuis:true
 ofShowGlErrors:true
 ofFullscreenMode:Default
-ofFastMath:false
-ofFastRender:false
+ofFastMath:true
+ofFastRender:true
 ofTranslucentBlocks:0
 key_of.key.zoom:46
 key_Debug Cam:61

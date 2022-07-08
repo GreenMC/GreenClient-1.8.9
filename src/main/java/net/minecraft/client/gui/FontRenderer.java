@@ -3,6 +3,7 @@ package net.minecraft.client.gui;
 import com.ibm.icu.text.ArabicShaping;
 import com.ibm.icu.text.ArabicShapingException;
 import com.ibm.icu.text.Bidi;
+import io.github.greenmc.ChatEffects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -21,10 +22,12 @@ import net.optifine.util.FontUtils;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.List;
 
 public class FontRenderer implements IResourceManagerReloadListener {
     private static final ResourceLocation[] unicodePageLocations = new ResourceLocation[256];
@@ -232,7 +235,7 @@ public class FontRenderer implements IResourceManagerReloadListener {
     {
         if (unicodePageLocations[page] == null)
         {
-            unicodePageLocations[page] = new ResourceLocation(String.format("textures/font/unicode_page_%02x.png", new Object[] {Integer.valueOf(page)}));
+            unicodePageLocations[page] = new ResourceLocation(String.format("textures/font/unicode_page_%02x.png", page));
             unicodePageLocations[page] = FontUtils.getHdFontLocation(unicodePageLocations[page]);
         }
 
@@ -359,7 +362,7 @@ public class FontRenderer implements IResourceManagerReloadListener {
                     this.underlineStyle = false;
                     this.italicStyle = false;
 
-                    if (l < 0 || l > 15)
+                    if (l < 0)
                     {
                         l = 15;
                     }
@@ -883,7 +886,7 @@ public class FontRenderer implements IResourceManagerReloadListener {
 
     public static String getFormatFromString(String text)
     {
-        String s = "";
+        StringBuilder s = new StringBuilder();
         int i = -1;
         int j = text.length();
 
@@ -895,16 +898,16 @@ public class FontRenderer implements IResourceManagerReloadListener {
 
                 if (isFormatColor(c0))
                 {
-                    s = "\u00a7" + c0;
+                    s = new StringBuilder("\u00a7" + c0);
                 }
                 else if (isFormatSpecial(c0))
                 {
-                    s = s + "\u00a7" + c0;
+                    s.append("\u00a7").append(c0);
                 }
             }
         }
 
-        return s;
+        return s.toString();
     }
 
     public boolean getBidiFlag()
@@ -933,9 +936,13 @@ public class FontRenderer implements IResourceManagerReloadListener {
         }
     }
 
-    protected void setColor(float p_setColor_1_, float p_setColor_2_, float p_setColor_3_, float p_setColor_4_)
+    protected void setColor(Color color) {
+        GlStateManager.color(color.getRed(), color.getBlue(), color.getGreen(), color.getAlpha());
+    }
+
+    protected void setColor(float red, float blue, float green, float alpha)
     {
-        GlStateManager.color(p_setColor_1_, p_setColor_2_, p_setColor_3_, p_setColor_4_);
+        GlStateManager.color(red, blue, green, alpha);
     }
 
     protected void enableAlpha()

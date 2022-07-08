@@ -149,10 +149,10 @@ public class ItemRenderer
     private void renderPlayerArms(AbstractClientPlayer clientPlayer)
     {
         this.mc.getTextureManager().bindTexture(clientPlayer.getLocationSkin());
-        Render<AbstractClientPlayer> render = this.renderManager.<AbstractClientPlayer>getEntityRenderObject(this.mc.thePlayer);
+        Render<AbstractClientPlayer> render = this.renderManager.getEntityRenderObject(this.mc.thePlayer);
         RenderPlayer renderplayer = (RenderPlayer)render;
 
-        if (!clientPlayer.isInvisible())
+        if (mc.seeInvis || !clientPlayer.isInvisible())
         {
             GlStateManager.disableCull();
             this.renderRightArm(renderplayer);
@@ -361,7 +361,7 @@ public class ItemRenderer
 
                 this.renderItem(abstractclientplayer, this.itemToRender, ItemCameraTransforms.TransformType.FIRST_PERSON);
             }
-            else if (!abstractclientplayer.isInvisible())
+            else if (mc.seeInvis || !abstractclientplayer.isInvisible())
             {
                 this.renderPlayerArm(abstractclientplayer, f, f1);
             }
