@@ -19,12 +19,10 @@ import java.nio.file.*;
  */
 public class GuiCapeEditor extends GuiScreen {
 
-	private GuiTextField capeNameField;
-	private GuiTextField capeUrlField;
+	private String current = "";
+	private GuiTextField capeNameField, capeUrlField;
 
 	private final GuiScreen parentScreen;
-
-	public String current = "";
 
 	public GuiCapeEditor(GuiScreen parentScreen) {
 		this.parentScreen = parentScreen;
