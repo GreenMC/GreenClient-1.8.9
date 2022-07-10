@@ -19,7 +19,7 @@ import java.nio.file.*;
  */
 public class GuiCapeEditor extends GuiScreen {
 
-	private String current = "";
+	private String current = "", repoLink;
 	private GuiTextField capeNameField, capeUrlField;
 
 	private final GuiScreen parentScreen;
@@ -67,9 +67,12 @@ public class GuiCapeEditor extends GuiScreen {
 		GuiButton deleteButton = new GuiButtonDelete(4, width / 2 - 130, height / 6 + 25);
 		deleteButton.enabled = Files.exists(Paths.get("C:\\TEMP\\CustomCapes"));
 
+		GuiButtonUploadType sshOrGitButton = new GuiButtonUploadType(5, width / 2 - 180, height / 6, "SSH", "Git");
+
 		buttonList.add(resetButton);
 		buttonList.add(uploadButton);
 		buttonList.add(deleteButton);
+		buttonList.add(sshOrGitButton);
 		buttonList.add(downloadButton);
 		buttonList.add(new GuiButton(2, width / 2 - 100, height / 4 + 122, "Cancel"));
 	}
@@ -119,6 +122,12 @@ public class GuiCapeEditor extends GuiScreen {
 			buttonList.get(2).enabled = false;
 
 			current = "Dosyalar başarıyla silindi.";
+		}
+
+		if (button.id == 5) {
+			repoLink = ((GuiButtonUploadType) buttonList.get(3)).getValue();
+
+			System.out.println(repoLink);
 		}
 	}
 
@@ -175,7 +184,7 @@ public class GuiCapeEditor extends GuiScreen {
 					Files.createDirectories(directory);
 
 					editor.current = "Repo klonlanıyor...";
-					Git.gitClone(directory, "git@github.com:GreenMC/CustomCapes.git");
+					Git.gitClone(directory, repoLink);
 				}
 
 				editor.current = "URL'deki veriler dosyaya yazılıyor...";

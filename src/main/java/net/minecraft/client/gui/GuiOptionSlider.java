@@ -30,8 +30,7 @@ public class GuiOptionSlider extends GuiButton
         this.displayString = minecraft.gameSettings.getKeyBinding(p_i45017_4_);
     }
 
-    protected int getHoverState(boolean mouseOver)
-    {
+    protected int getHoverState(boolean mouseOver){
         return 0;
     }
 
