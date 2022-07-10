@@ -126,8 +126,6 @@ public class GuiCapeEditor extends GuiScreen {
 
 		if (button.id == 5) {
 			repoLink = ((GuiButtonUploadType) buttonList.get(3)).getValue();
-
-			System.out.println(repoLink);
 		}
 	}
 
