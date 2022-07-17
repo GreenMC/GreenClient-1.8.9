@@ -207,10 +207,11 @@ public class GameSettings {
     public boolean ofDrippingWaterLava = true;
     public boolean ofAnimatedTerrain = true;
     public boolean ofAnimatedTextures = true;
+    public boolean toggleSneak;
     public static final int DEFAULT = 0, FAST = 1;
     private static final int[] OF_TREES_VALUES = {0, 1, 4, 2}, OF_DYNAMIC_LIGHTS = {3, 1, 2};
     private static final String[] KEYS_DYNAMIC_LIGHTS = {"options.off", "options.graphics.fast", "options.graphics.fancy"};
-    public KeyBinding ofKeyBindZoom, hideMenu, debugCam;
+    public KeyBinding ofKeyBindZoom, hideMenu, debugCam, keyBindToggleSneak;
     private File optionsFileOF;
 
     public GameSettings(Minecraft mcIn, File optionsFileIn) {
@@ -242,9 +243,10 @@ public class GameSettings {
         this.optionsFileOF = new File(optionsFileIn, "optionsof.txt");
         this.limitFramerate = (int) GameSettings.Options.FRAMERATE_LIMIT.getValueMax();
         this.ofKeyBindZoom = new KeyBinding("of.key.zoom", 46, "key.categories.misc");
+        this.keyBindToggleSneak = new KeyBinding("Sneak Toggle", 44, "key.categories.gameplay");
         this.debugCam = new KeyBinding("Debug Cam", 61, "key.categories.misc");
         this.hideMenu = new KeyBinding("Hide Menu", 59, "key.categories.misc");
-        this.keyBindings = ArrayUtils.addAll(keyBindings, ofKeyBindZoom, hideMenu, debugCam);
+        this.keyBindings = ArrayUtils.addAll(keyBindings, ofKeyBindZoom, hideMenu, debugCam, keyBindToggleSneak);
         this.renderDistanceChunks = 8;
         this.loadOptions();
         Config.initGameSettings(this);
@@ -2577,6 +2579,10 @@ public class GameSettings {
                     if (option.equals("key_" + this.debugCam.getKeyDescription())) {
                         this.debugCam.setKeyCode(Integer.parseInt(options[1]));
                     }
+
+                    if (option.equals("key_" + this.keyBindToggleSneak.getKeyDescription())) {
+                        this.keyBindToggleSneak.setKeyCode(Integer.parseInt(options[1]));
+                    }
                 }
                 catch (Exception exception)
                 {
@@ -2670,7 +2676,9 @@ public class GameSettings {
             printwriter.println("ofFastMath:" + this.ofFastMath);
             printwriter.println("ofFastRender:" + this.ofFastRender);
             printwriter.println("ofTranslucentBlocks:" + this.ofTranslucentBlocks);
+            printwriter.println("toggleSneak:" + this.toggleSneak);
             printwriter.println("key_" + this.ofKeyBindZoom.getKeyDescription() + ":" + this.ofKeyBindZoom.getKeyCode());
+            printwriter.println("key_" + this.keyBindToggleSneak.getKeyDescription() + ":" + this.keyBindToggleSneak.getKeyCode());
             printwriter.println("key_" + this.debugCam.getKeyDescription() + ":" + this.debugCam.getKeyCode());
             printwriter.println("key_" + this.hideMenu.getKeyDescription() + ":" + this.hideMenu.getKeyCode());
             printwriter.close();

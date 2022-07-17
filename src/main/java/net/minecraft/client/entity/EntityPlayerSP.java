@@ -530,7 +530,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
 
     public boolean isSneaking()
     {
-        boolean flag = this.movementInput != null ? this.movementInput.sneak : false;
+        boolean flag = this.movementInput != null && (this.movementInput.sneak || mc.gameSettings.toggleSneak);
         return flag && !this.sleeping;
     }
 

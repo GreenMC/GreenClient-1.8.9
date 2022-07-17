@@ -37,7 +37,7 @@ public class MovementInputFromOptions extends MovementInput
         }
 
         this.jump = this.gameSettings.keyBindJump.isKeyDown();
-        this.sneak = this.gameSettings.keyBindSneak.isKeyDown();
+        this.sneak = this.gameSettings.keyBindSneak.isKeyDown() || this.gameSettings.toggleSneak;
 
         if (this.sneak)
         {

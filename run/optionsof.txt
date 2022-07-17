@@ -69,6 +69,8 @@ ofFullscreenMode:Default
 ofFastMath:false
 ofFastRender:false
 ofTranslucentBlocks:0
+toggleSneak:false
 key_of.key.zoom:46
+key_Sneak Toggle:44
 key_Debug Cam:61
 key_Hide Menu:59

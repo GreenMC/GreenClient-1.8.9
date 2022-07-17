@@ -2,6 +2,7 @@ package net.minecraft.client.gui;
 
 import io.github.greenmc.ChatEffects;
 import io.github.greenmc.gui.GuiCapeEditor;
+import io.github.greenmc.gui.GuiGreenOptions;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundEventAccessorComposite;
@@ -16,11 +17,12 @@ import net.minecraft.world.EnumDifficulty;
 import java.io.IOException;
 
 public class GuiOptions extends GuiScreen implements GuiYesNoCallback {
-    private static final GameSettings.Options[] field_146440_f = new GameSettings.Options[] {GameSettings.Options.FOV};
+
+    private static final GameSettings.Options[] gameOptions = new GameSettings.Options[] {GameSettings.Options.FOV};
     private final GuiScreen parentScreen;
     private final GameSettings gameSettings;
-    private GuiButton field_175357_i, capeEditorButton;
-    private GuiLockIconButton field_175356_r;
+    private GuiButton lockButton, capeEditorButton, greenOptionsButton;
+    private GuiLockIconButton guiLockIconButton;
     protected String title = "Options";
 
     public GuiOptions(GuiScreen parentScreen, GameSettings gameSettings) {
@@ -32,7 +34,7 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback {
         int i = 0;
         this.title = I18n.format("options.title");
 
-        for (GameSettings.Options gamesettings$options : field_146440_f) {
+        for (GameSettings.Options gamesettings$options : gameOptions) {
             if (gamesettings$options.getEnumFloat()) {
                 this.buttonList.add(new GuiOptionSlider(gamesettings$options.returnEnumOrdinal(), this.width / 2 - 155 + i % 2 * 160, this.height / 6 - 12 + 24 * (i >> 1), gamesettings$options));
             } else {
@@ -45,21 +47,18 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback {
 
         if (mc.theWorld != null) {
             EnumDifficulty enumdifficulty = this.mc.theWorld.getDifficulty();
-            this.field_175357_i = new GuiButton(108, this.width / 2 - 155 + i % 2 * 160, this.height / 6 - 12 + 24 * (i >> 1), 150, 20, this.func_175355_a(enumdifficulty));
-            this.buttonList.add(this.field_175357_i);
+            this.lockButton = new GuiButton(111, this.width / 2 - 155 + i % 2 * 160, this.height / 6 - 12 + 24 * (i >> 1), 150, 20, this.func_175355_a(enumdifficulty));
+            this.buttonList.add(this.lockButton);
 
-            if (this.mc.isSingleplayer() && !this.mc.theWorld.getWorldInfo().isHardcoreModeEnabled())
-            {
-                this.field_175357_i.setWidth(this.field_175357_i.getButtonWidth() - 20);
-                this.field_175356_r = new GuiLockIconButton(109, this.field_175357_i.xPosition + this.field_175357_i.getButtonWidth(), this.field_175357_i.yPosition);
-                this.buttonList.add(this.field_175356_r);
-                this.field_175356_r.func_175229_b(this.mc.theWorld.getWorldInfo().isDifficultyLocked());
-                this.field_175356_r.enabled = !this.field_175356_r.func_175230_c();
-                this.field_175357_i.enabled = !this.field_175356_r.func_175230_c();
-            }
-            else
-            {
-                this.field_175357_i.enabled = false;
+            if (this.mc.isSingleplayer() && !this.mc.theWorld.getWorldInfo().isHardcoreModeEnabled()) {
+                this.lockButton.setWidth(this.lockButton.getButtonWidth() - 20);
+                this.guiLockIconButton = new GuiLockIconButton(109, this.lockButton.xPosition + this.lockButton.getButtonWidth(), this.lockButton.yPosition);
+                this.buttonList.add(this.guiLockIconButton);
+                this.guiLockIconButton.func_175229_b(this.mc.theWorld.getWorldInfo().isDifficultyLocked());
+                this.guiLockIconButton.enabled = !this.guiLockIconButton.func_175230_c();
+                this.lockButton.enabled = !this.guiLockIconButton.func_175230_c();
+            } else {
+                this.lockButton.enabled = false;
             }
         }
 
@@ -84,6 +83,7 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback {
         this.buttonList.add(new GuiButton(103, this.width / 2 + 5, this.height / 6 + 96 - 6, 150, 20, I18n.format("options.chat.title")));
         this.buttonList.add(new GuiButton(105, this.width / 2 - 155, this.height / 6 + 120 - 6, 150, 20, I18n.format("options.resourcepack")));
         this.buttonList.add(capeEditorButton = new GuiButton(107, this.width / 2 - 155, this.height / 6 + 144 - 6, 150, 20, "Cape Editor", ChatEffects.rainbowEffect(1, 1).getRGB()));
+        this.buttonList.add(greenOptionsButton = new GuiButton(120, this.width / 2 + 5, this.height / 6 + 144 - 6, 150, 20, "Green Options", ChatEffects.rainbowEffect(1, 1).getRGB()));
         this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, I18n.format("gui.done")));
     }
 
@@ -103,9 +103,9 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback {
         if (id == 109 && result && this.mc.theWorld != null)
         {
             this.mc.theWorld.getWorldInfo().setDifficultyLocked(true);
-            this.field_175356_r.func_175229_b(true);
-            this.field_175356_r.enabled = false;
-            this.field_175357_i.enabled = false;
+            this.guiLockIconButton.func_175229_b(true);
+            this.guiLockIconButton.enabled = false;
+            this.lockButton.enabled = false;
         }
     }
 
@@ -123,7 +123,7 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback {
             if (button.id == 108)
             {
                 this.mc.theWorld.getWorldInfo().setDifficulty(EnumDifficulty.getDifficultyEnum(this.mc.theWorld.getDifficulty().getDifficultyId() + 1));
-                this.field_175357_i.displayString = this.func_175355_a(this.mc.theWorld.getDifficulty());
+                this.lockButton.displayString = this.func_175355_a(this.mc.theWorld.getDifficulty());
             }
 
             if (button.id == 109)
@@ -170,6 +170,10 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback {
                 mc.displayGuiScreen(new GuiCapeEditor(this));
             }
 
+            if (button.id == 120) {
+                mc.displayGuiScreen(new GuiGreenOptions(this));
+            }
+
             if (button.id == 200)
             {
                 mc.gameSettings.saveOptions();
@@ -195,7 +199,8 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback {
     }
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.capeEditorButton.color = ChatEffects.rainbowEffect(1, 1).getRGB();
+        final int color = ChatEffects.rainbowEffect(1, 1).getRGB();
+        capeEditorButton.color = greenOptionsButton.color = color;
 
         this.drawDefaultBackground();
         this.drawCenteredString(this.fontRendererObj, this.title, this.width / 2, 15, 16777215);

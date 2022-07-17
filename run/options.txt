@@ -61,7 +61,7 @@ key_key.pickItem:-98
 key_key.command:53
 key_key.screenshot:60
 key_key.togglePerspective:63
-key_key.smoothCamera:0
+key_key.smoothCamera:33
 key_key.fullscreen:87
 key_key.spectatorOutlines:0
 key_key.hotbar.1:2
@@ -76,6 +76,7 @@ key_key.hotbar.9:10
 key_of.key.zoom:46
 key_Hide Menu:59
 key_Debug Cam:61
+key_Sneak Toggle:44
 soundCategory_master:0.0
 soundCategory_music:1.0
 soundCategory_record:1.0

@@ -1711,6 +1711,10 @@ public class Minecraft implements IThreadListener {
                             this.gameSettings.showLagometer = GuiScreen.isAltKeyDown();
                         }
 
+                        if (this.gameSettings.keyBindToggleSneak.isPressed()) {
+                            gameSettings.toggleSneak = !gameSettings.toggleSneak;
+                        }
+
                         if (this.gameSettings.keyBindTogglePerspective.isPressed())
                         {
                             ++this.gameSettings.thirdPersonView;
